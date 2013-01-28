@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <title>Tock</title>
+  <script src="tock.js"></script>
+  <style>
+    pre {
+      background: #eee;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+  </style>
+  <script>
+    window.onload = function() {
+      var tick = new Tock({
+        interval: 10,
+        callback: function () {
+          console.log(tick.lap());
+          document.getElementById('clockface').value = tick.msToTime(tick.lap());
+        }
+      });
+      
+      document.getElementById('getTime').onclick = function () {
+        document.getElementById('laptimes').innerHTML += tick.lap();
+      }
+      
+      document.getElementById('start').onclick = function () {
+        tick.start();
+      }
+      
+      document.getElementById('stop').onclick = function () {
+        tick.stop();
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Tock</h1>
+  <p>Tock is almost accurate to the millisecond. Or about as close as you can get in Javascript.</p>
+  <pre>Here's some code</pre>
+  <p>
+    <button id="getTime">Lap</button>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+  </p>
+  <p>
+    <input id="clockface" placeholder="clock">
+  </p>
+  <p>
+    <textarea id="laptimes" rows="20"></textarea>
+  </p>
+</body>
+</html>
