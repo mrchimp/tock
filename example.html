@@ -20,7 +20,6 @@
     
       // Setup a new timer
       var timer = new Tock({
-        // type: 'timer', // dont need this - timer is default
         callback: function () {
           document.getElementById('clockface').value = timer.msToTime(timer.lap());
         }
