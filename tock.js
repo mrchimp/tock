@@ -21,6 +21,7 @@ Tock.prototype.tick = function() {
   this.time += this.interval;
   
   // get _accurate_ number of ticks since start
+  // i.e. number of ticks their should have been
   this.elapsed = Math.floor(this.time / this.interval) / 10;
   
   // convert to float if necessary
@@ -44,10 +45,12 @@ Tock.prototype.tick = function() {
 };
 
 Tock.prototype.tickDown = function () {
+  console.log('tickdown');
   // indecrement the clock
-  this.time += this.interval;
+  this.time -= this.interval;
   
   // get _accurate_ number of ticks since start
+  // i.e. number of ticks their should have been
   this.elapsed = Math.floor(this.time / this.interval) / 10;
   
   // convert to float if necessary
@@ -66,7 +69,7 @@ Tock.prototype.tickDown = function () {
   
   // if we're still counting, keep ticking
   if (this.go) {
-    this.timeout = setTimeout(function () {t.tick();}, (this.interval - diff));
+    this.timeout = setTimeout(function () {t.tickDown();}, (this.interval - diff));
   }
 };
 
@@ -79,8 +82,18 @@ Tock.prototype.reset = function () {
 };
 
 // Called internally - use start() instead
-Tock.prototype._startCountdown = function () {
+Tock.prototype._startCountdown = function (start) {  
+  
+  var time_split = start.split(':');
+  var duration_ms = start[0] * 1000;
+  
+  if (start.length) {
+    duration_ms += start[1] * 60000;
+  }
+
+  console.log(duration_ms);
   this.start_time = Date.now();
+  this.end_time = this.start_time + start;
   this.time = 0;
   this.elapsed = '0.0';
   this.go = true;
@@ -103,9 +116,9 @@ Tock.prototype._startTimer = function () {
 };
 
 // Start the clock
-Tock.prototype.start = function() {
+Tock.prototype.start = function(start) {
   if (this.type == 'countdown') {
-    this._startCountdown();
+    this._startCountdown(start);
   } else {
     this._startTimer();
   }
