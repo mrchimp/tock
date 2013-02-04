@@ -24,39 +24,54 @@
           document.getElementById('clockface').value = timer.msToTime(timer.lap());
         }
       });
+      timer.name = 'timezzz';
       
+      // Add a start button
       document.getElementById('start').onclick = function () {
+        console.log(timer);
         timer.start();
       }
       
+      // Add a lap button
       document.getElementById('lap').onclick = function () {
         document.getElementById('laptimes').innerHTML += timer.msToTime(timer.lap()) + '<br>';
       }
       
+      // Add a stop button
       document.getElementById('stop').onclick = function () {
         timer.stop();
       }
       
+      // Add a reset button
       document.getElementById('reset').onclick = function () {
         timer.reset();
         document.getElementById('clockface').value = '';
         document.getElementById('laptimes').innerHTML = '';
       }
       
-      // setup countdown
+      
+      
+      
+      // Setup a new countdown timer
       var countdown = new Tock({
         type: 'countdown',
         callback: function () {
-          document.getElementById('countdown_clock').value = timer.msToTime(timer.lap());
+          document.getElementById('countdown_clock').value = timer.msToTime(countdown.lap());
         }
       });
+      countdown.name = 'countszzzz';
       
+      // Add a start button
+      // Send the value from the output as a start time in order for resuming to work
       document.getElementById('startCountdown').onclick = function () {
+        console.log(countdown);
         countdown.start(document.getElementById('countdown_clock').value);
       }
       
+      // add a stop button
       document.getElementById('stopCountdown').onclick = function () {
         countdown.stop();
+        //document.getElementById('countdown_clock').value = '10:00';
       }
     }
   </script>
@@ -68,6 +83,7 @@
     by Mr Chimp<br>
     Available on <a href="http://github.com/mrchimp/tock">github</a>
   </p>
+  
   <section>
     <h2>Timer</h2>
     <p>
@@ -83,6 +99,7 @@
       <div id="laptimes"></div>
     </p>
   </section>
+  
   <section>
     <h2>Countdown</h2>
     <p>

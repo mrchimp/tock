@@ -1,28 +1,31 @@
 /**
- * Tock by Mr Chimp - github.com/mrchimp
- * Based on code by James Edwards:
- *    sitepoint.com/creating-accurate-timers-in-javascript/
- */
+* Tock by Mr Chimp - github.com/mrchimp
+* Based on code by James Edwards:
+*    sitepoint.com/creating-accurate-timers-in-javascript/
+*/
 
 function Tock(options) {
-  this.interval = options.interval || 10;//you probably dont want to change this
-  this.type = options.type || 'timer';
-  if (options.callback != undefined) {
-    this.callback = options.callback;
-  } else {
-    this.callback = function () {};
-  }
-  this.go = false;
-  this.countdown_start = 0;
+    //you probably dont want to change this
+    this.interval = options.interval || 10;
+    this.type = options.type || 'timer';
+    if (options.callback != undefined) {
+        this.callback = options.callback;
+    }
+    else {
+        this.callback = function () {};
+    }
+    this.go = false;
+    this.countdown_start = 0;
 }
 
-Tock.prototype.tick = function() {
+Tock.prototype.tick = function () {
+  console.log(this.name);
+
   // indecrement the clock
   this.time += this.interval;
-  
   // get _accurate_ number of ticks since start
   // i.e. number of ticks their should have been
-  this.elapsed = Math.floor(this.time / this.interval) / 10;
+  this.elapsed = Math.floor(this.time / this.interval)/ 10;
   
   // convert to float if necessary
   if(Math.round(this.elapsed) == this.elapsed) { this.elapsed += '.0'; }
@@ -45,27 +48,35 @@ Tock.prototype.tick = function() {
 };
 
 Tock.prototype.tickDown = function () {
-  console.log('tickdown');
+  console.log(this.name);
+  
   // indecrement the clock
-  this.time -= this.interval;
+  this.time += this.interval;
+  
+  this.clock_time = this.start_time
   
   // get _accurate_ number of ticks since start
   // i.e. number of ticks their should have been
-  this.elapsed = Math.floor(this.time / this.interval) / 10;
+  this.elapsed = Math.floor(this.time / this.interval)/ 10;
   
   // convert to float if necessary
   if(Math.round(this.elapsed) == this.elapsed) { this.elapsed += '.0'; }
   
   // find the difference between 
+  //var diff = (Date.now() - this.start_time) - this.time;
   var diff = (Date.now() - this.start_time) - this.time;
-  
-  // get the current scope to pass to the timeout
-  var t = this;
   
   // run the callback function if there is one
   if (this.callback != undefined) {
     this.callback(this);
   }
+  
+  if (this.duration_ms - this.time < 0) {
+    alert('end!');
+    this.go = false;
+  } 
+  
+  var t = this; // get the current scope to pass to the timeout
   
   // if we're still counting, keep ticking
   if (this.go) {
@@ -85,15 +96,14 @@ Tock.prototype.reset = function () {
 Tock.prototype._startCountdown = function (start) {  
   
   var time_split = start.split(':');
-  var duration_ms = start[0] * 1000;
+  this.duration_ms = parseInt(time_split[0]) * 60000;
   
-  if (start.length) {
-    duration_ms += start[1] * 60000;
+  if (time_split.length) {
+    this.duration_ms += parseInt(time_split[1]) * 1000;
   }
 
-  console.log(duration_ms);
   this.start_time = Date.now();
-  this.end_time = this.start_time + start;
+  this.end_time = this.start_time + this.duration_ms;
   this.time = 0;
   this.elapsed = '0.0';
   this.go = true;
@@ -133,7 +143,11 @@ Tock.prototype.stop = function() {
 
 // Get the current time
 Tock.prototype.lap = function() {
-  var now = (Date.now() - this.start_time);
+  if (this.type == 'timer') {
+    var now = (Date.now() - this.start_time);
+  } else {
+    var now = this.duration_ms - (Date.now() - this.start_time);
+  }
   
   if (this.go) {
     return now;
@@ -149,11 +163,12 @@ Tock.prototype.lap = function() {
 // Format milliseconds as a string
 Tock.prototype.msToTime = function(ms) {
   var milliseconds = ms % 1000,
-      seconds = Math.floor((ms / 1000) % 60).toString(),
-      minutes = Math.floor((ms / (60 * 1000)) % 60).toString();
-  
-  if (seconds.length == 1) { seconds = '0' + seconds }
-  if (minutes.length == 1) { minutes = '0' + minutes }
-  
-  return minutes + ":" + seconds + ":" + milliseconds;
+      seconds = Math.floor((ms /1000) % 60).toString(), minutes = Math.floor((ms / (60 * 1000)) % 60).toString();
+    if (seconds.length == 1) {
+        seconds = '0' + seconds;
+    }
+    if (minutes.length == 1) {
+        minutes = '0' + minutes;
+    }
+    return minutes + ":" + seconds + ":" + milliseconds;
 };
