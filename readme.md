@@ -7,6 +7,7 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 
 ## Features ##
 
+* Constantly corrects time based on the system clock - won't go out of time.
 * Can be used to count up from 0:00 or down from a given time. 
 * Can call a callback function every tick (10 milliseconds) and (for countdown clocks) when the clock reaches 0:00.
 * Pretty much accurate to about 10 milliseconds (0.01 seconds). 
