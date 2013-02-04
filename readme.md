@@ -5,6 +5,8 @@ A javscript timer/countdown clock.
 Based on code by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
+Demo: http://deviouschimp.co.uk/misc/tock
+
 ## Features ##
 
 * Constantly corrects time based on the system clock - won't go out of time.
