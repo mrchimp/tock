@@ -7,51 +7,75 @@ Demo: http://deviouschimp.co.uk/misc/tock
 Based on code by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
-## Features ##
+# Features #
 
 * Self-correcting time based on the system clock - won't go out of time unlike clocks based solely on setInterval or setTimeout.
 * Can be used to count up from 0:00 or down from a given time. 
 * Can call a callback function every tick (10 milliseconds) and (for countdown clocks) when the clock reaches 0:00.
 * About as accurate a clock as you can get with javascript.
 
-## Possible Uses ##
+# Possible Uses #
 
- * Accurate timing of repeated actions
  * Countdown counters, e.g. for site launches
  * Accurate stopwatches/timers
+ * Accurate timing of any repeated actions
 
-## How does it work? ##
+# How does it work? #
 
-#### Make some html to show the clock. ####
+Tock can be used behind the scenes but here we'll make a stop-watch that updates in realtime on screen.
+
+### 1) Make some html to show the clock. ###
 
       <button id="start">Start</button> 
       <button id="stop">Stop</button> 
       <input id="clock" value="10:00">
+      <script> // javascripts... </script>
 
-#### Instantiate a Tock ####
+### 2) Instantiate a Tock ###
 
-In javascript we make a new instance of Tock and assign it to a variable called *timer*. We'll pass in some options as an object literal while we're at it. *All options are... optional.*
+Next we make a new instance of Tock in our javascript code and assign it to a variable called *timer*.
 
-    var timer = new Tock({
+    var timer = new Tock();
+
+This will give you a clock that will count up from 00:00 when the start() method is called. The stop() and reset() methods can also be used.
+
+It's more intersting if you pass in some options though. *Note that all options are... optional.*
+
+    var options = {
         countdown: true,
         interval: 10,
         callback: someCallbackFunction,
         complete: someCompleteFunction
-    });
+    }
+    var timer = new Tock(options);
 
-#### Options ####
+
+#### Available options ####
 
   * **countdown** *boolean* If true, the clock will count down from a given time, otherwise it will count up from 0:00. Default: false.
-
   * **interval** *integer* How often, in milliseconds, that the clock will tick. Default: 10.
+  * **callback** *function* Default: null (see below)
+  * **complete** *function* Default: null (see below)
 
-  * **callback** *function* Called every time the clock ticks, once per *interval*. Default: null;
+#### Callback functions ####
 
-  * **complete** *function* Called once the clock reaches 0:00. (only used if countdown = true). Default: null.
+The callback option is a function that will be called once every *interval* milliseconds.
 
-#### Add some controls ####
+Here we'll use the *lap()* method to get the current clock time (in milliseconds). We'll then pass that through *msToTime()* to format it nicely and before displaying it in the input field.
 
-Now you'll need some way of controlling your clock. Let's set up some buttons *(using jQuery)*.
+    callback: function () {
+        $('#clock').val(timer.msToTime(timer.lap()));
+    }
+
+As we are have set *countdown* to *true* we can also replace *someCompleteFunction* with a function to call once the countdown reaches zero.
+
+    complete: function () {
+        alert("Time's up!");
+    }
+
+### 2) Add some controls ###
+
+You'll need some way of controlling your clock. Let's set up some buttons *(using jQuery for example)*.
 
     $('#start').on('click', function() {
 	    timer.start($('#clock').val());
@@ -69,22 +93,7 @@ If you're not using a countdown clock you can make a reset button, too.
 	    timer.reset();
 	});
 
-
-#### Add some callback functions ####
-
-*someCallbackFunction* in the code above is a function to call once every *interval* milliseconds. Below, we use the *lap()* method to get the current clock time (in milliseconds). We then pass that through *msToTime()* to format it nicely and then display it into the input field.
-
-    callback: function () {
-        $('#clock').val(timer.msToTime(timer.lap()));
-    }
-
-As we are have set *countdown* to *true* we can also replace *someCompleteFunction* with a function to call once the countdown reaches zero.
-
-    complete: function () {
-        alert("Time's up!");
-    }
-
-## Methods ##
+# Methods #
 
  * reset()
  * start(time)
