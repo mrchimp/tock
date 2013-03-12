@@ -7,6 +7,8 @@ Demo: http://deviouschimp.co.uk/misc/tock
 Based on code by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
+Status: Complete
+
 # Features #
 
 * Self-correcting time based on the system clock - won't go out of time unlike clocks based solely on setInterval or setTimeout.
@@ -61,7 +63,7 @@ It's more intersting if you pass in some options though. *Note that all options 
 
 The callback option is a function that will be called once every *interval* milliseconds.
 
-Here we'll use the *lap()* method to get the current clock time (in milliseconds). We'll then pass that through *msToTime()* to format it nicely and before displaying it in the input field.
+Here we'll use the *lap()* method to get the current clock time (in milliseconds). We'll then pass that through *msToTime()* to format it nicely before displaying it in the *input* field.
 
     callback: function () {
         $('#clock').val(timer.msToTime(timer.lap()));
@@ -92,6 +94,8 @@ If you're not using a countdown clock you can make a reset button, too.
     $('#reset').on('click', function() {
 	    timer.reset();
 	});
+
+You could also create a reset button if you *are* using a countdown clock, but that's beyond the scope of this walkthrough. The tools are there. Do with them what you can. After this next section you're on your own. Good luck. We're all counting on you.
 
 # Methods #
 
