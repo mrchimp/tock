@@ -39,7 +39,7 @@ Tock.js works behind the scenes - it doesn't alter anything on screen - so here 
 
 ### 2) Instantiate a Tock ###
 
-Now we write some Javascript. First we'll need to create a new instance of Tock and assign it to a variable called *timer*.
+Now we write some Javascript. First we'll create a new instance of Tock and assign it to a variable called *timer*.
 
     var timer = new Tock();
 
