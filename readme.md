@@ -15,6 +15,7 @@ Todo:
 
 # What's so good about it? #
 
+* Pure Javascript - no dependencies
 * Self-correcting time based on the system clock - won't go out of time unlike clocks based solely on setInterval or setTimeout (see the link above).
 * It can be used to count up from 0:00 or down from a given time. 
 * It can call a callback function every tick (10 milliseconds) and (for countdown clocks) when the clock reaches 0:00.
