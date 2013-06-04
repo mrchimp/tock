@@ -70,12 +70,14 @@ Tock.prototype.lap = function () {
  * Format milliseconds as a string.
  */
 Tock.prototype.msToTime = function (ms) {
+    if (ms <= 0) {
+      return "00:00.000";
+    }
+
     var milliseconds = (ms % 1000).toString(),
         seconds = Math.floor((ms / 1000) % 60).toString(),
         minutes = Math.floor((ms / (60 * 1000)) % 60).toString();
-    if (milliseconds <= 0) {
-      return "00:00.000";
-    }
+
     if (milliseconds.length === 1) {
         milliseconds = '00' + milliseconds;
     } else if (milliseconds.length === 2) {
