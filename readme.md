@@ -27,6 +27,10 @@ Todo:
  * Timers
  * Accurate timing of any repeated action
 
+# Known issues #
+
+Minimising the browser window may pause the clock. It should (will?) catch up once the window. I'm still looking into this.
+
 # How do I use it? #
 
 Tock.js works behind the scenes - it doesn't alter anything on screen - so here I'll show how to make a stop-watch that updates in real-time on screen.
