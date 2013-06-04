@@ -46,7 +46,7 @@ Tock.prototype.stop = function () {
     window.clearTimeout(this.timeout);
 };
 
-/** 
+/**
  * Get the current clock time in ms.
  * Use with Tock.msToTime() to make it look nice.
  */
@@ -70,16 +70,21 @@ Tock.prototype.lap = function () {
  * Format milliseconds as a string.
  */
 Tock.prototype.msToTime = function (ms) {
-    var milliseconds = ms % 1000,
+    var milliseconds = (ms % 1000).toString(),
         seconds = Math.floor((ms / 1000) % 60).toString(),
         minutes = Math.floor((ms / (60 * 1000)) % 60).toString();
+    if (milliseconds.length === 1) {
+        milliseconds = '00' + milliseconds;
+    } else if (milliseconds.length === 2) {
+        milliseconds = '0' + milliseconds;
+    }
     if (seconds.length === 1) {
         seconds = '0' + seconds;
     }
     if (minutes.length === 1) {
         minutes = '0' + minutes;
     }
-    return minutes + ":" + seconds + ":" + milliseconds;
+    return minutes + ":" + seconds + "." + milliseconds;
 };
 
 /**
@@ -94,11 +99,11 @@ Tock.prototype.msToTime = function (ms) {
 Tock.prototype.timeToMS = function (time) {
 
     var ms = new Date(time).getTime();
-    
+
     if (!ms) {
         var time_split = time.split(':'),
             ms;
-        
+
         ms = parseInt(time_split[0], 10) * 60000;
 
         if (time_split.length > 1) {
