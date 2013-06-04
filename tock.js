@@ -132,7 +132,8 @@ Tock.prototype._tick = function () {
     if (Math.round(this.elapsed) === this.elapsed) { this.elapsed += '.0'; }
 
     var t = this,
-        diff = (Date.now() - this.start_time) - this.time;
+        diff = (Date.now() - this.start_time) - this.time,
+        next_interval_in = this.interval - diff;
 
     if (this.callback !== undefined) {
         this.callback(this);
@@ -144,8 +145,16 @@ Tock.prototype._tick = function () {
         this.complete();
     }
 
-    if (this.go) {
-        this.timeout = window.setTimeout(function () { t._tick(); }, (this.interval - diff));
+    if (next_interval_in <= 0) {
+        missed_ticks = Math.floor(Math.abs(next_interval_in) / this.interval)
+        this.time += missed_ticks * this.interval
+        if (this.go) {
+            this._tick();
+        }
+    } else {
+        if (this.go) {
+            this.timeout = window.setTimeout(function () { t._tick(); }, next_interval_in);
+        }
     }
 };
 
