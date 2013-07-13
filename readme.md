@@ -12,6 +12,7 @@ Status: Working
 Todo: 
  * Add timed events.
  * Improve msToTime() implementation
+ * Add custom complete conditions - x number of ticks for example
 
 # What's so good about it? #
 
