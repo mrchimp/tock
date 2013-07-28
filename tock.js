@@ -3,7 +3,7 @@
 * Based on code by James Edwards:
 *    sitepoint.com/creating-accurate-timers-in-javascript/
 */
-function Tock = (function() {
+var Tock = (function(options) {
   var go = false,
       interval = options.interval || 10,
       countdown = options.countdown || false,
@@ -11,97 +11,95 @@ function Tock = (function() {
       callback = options.callback,
       complete = options.complete;
 
-
   /**
    * Reset the clock
    */
   function reset() {
-    if (this.countdown) {
+    if (countdown) {
       return false;
     }
-    this.stop();
-    this.start_time = 0;
-    this.time = 0;
-    this.elapsed = '0.0';
-  };
+    stop();
+    start_time = 0;
+    time = 0;
+    elapsed = '0.0';
+  }
 
   /**
    * Start the clock.
    */
   function start(time) {
-    if (this.countdown) {
-      this._startCountdown(time);
+    if (countdown) {
+      _startCountdown(time);
     } else {
-      this._startTimer();
+      _startTimer();
     }
-  };  
-    
+  }
   
   /**
    * Called every tick for countdown clocks.
    * i.e. once every this.interval ms
    */
   function _tick() {
-    this.time += this.interval;
-    this.elapsed = Math.floor(this.time / this.interval) / 10;
+    time += interval;
+    elapsed = Math.floor(time / interval) / 10;
 
-    if (Math.round(this.elapsed) === this.elapsed) { this.elapsed += '.0'; }
+    if (Math.round(elapsed) === elapsed) { elapsed += '.0'; }
 
     var t = this,
-        diff = (Date.now() - this.start_time) - this.time,
-        next_interval_in = this.interval - diff;
+        diff = (Date.now() - start_time) - time,
+        next_interval_in = interval - diff;
 
-    if (this.callback !== undefined) {
-      this.callback(this);
+    if (callback !== undefined) {
+      callback(this);
     }
 
-    if (this.countdown && (this.duration_ms - this.time < 0)) {
-      this.final_time = 0;
-      this.go = false;
-      this.complete();
+    if (countdown && (duration_ms - time < 0)) {
+      final_time = 0;
+      go = false;
+      complete();
     }
 
     if (next_interval_in <= 0) {
-      missed_ticks = Math.floor(Math.abs(next_interval_in) / this.interval)
-      this.time += missed_ticks * this.interval
-      if (this.go) {
-        this._tick();
+      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval)
+      time += missed_ticks * interval
+      if (go) {
+        _tick();
       }
     } else {
-      if (this.go) {
-        this.timeout = window.setTimeout(function () { t._tick(); }, next_interval_in);
+      if (go) {
+        timeout = window.setTimeout(_tick, next_interval_in);
       }
     }
-  };
+  }
 
   /**
    * Stop the clock.
    */
   function stop() {
-    this.go = false;
-    this.final_time = (Date.now() - this.start_time);
-    window.clearTimeout(this.timeout);
-  };
+    go = false;
+    final_time = (Date.now() - start_time);
+    window.clearTimeout(timeout);
+  }
   
   /**
    * Get the current clock time in ms.
    * Use with Tock.msToTime() to make it look nice.
    */
   function lap() {
-    if (this.go) {
+    if (go) {
       var now;
 
-      if (this.countdown) {
-        now = this.duration_ms - (Date.now() - this.start_time);
+      if (countdown) {
+        now = duration_ms - (Date.now() - start_time);
       } else {
-        now = (Date.now() - this.start_time);
+        now = (Date.now() - start_time);
       }
 
       return now;
     }
 
-    return this.final_time;
-  };
+    return final_time;
+  }
   
   /**
    * Format milliseconds as a string.
@@ -127,7 +125,7 @@ function Tock = (function() {
       minutes = '0' + minutes;
     }
     return minutes + ":" + seconds + "." + milliseconds;
-  };
+  }
   
   /**
    * Convert a time string to milliseconds
@@ -157,40 +155,40 @@ function Tock = (function() {
     }
 
     return ms;
-  };
+  }
 
   /**
    * Called by Tock internally - use start() instead
    */
   function _startCountdown(duration) {
-    this.duration_ms = duration;
-    this.start_time = Date.now();
-    this.end_time = this.start_time + this.duration;
-    this.time = 0;
-    this.elapsed = '0.0';
-    this.go = true;
+    duration_ms = duration;
+    start_time = Date.now();
+    end_time = this.start_time + this.duration;
+    time = 0;
+    elapsed = '0.0';
+    go = true;
     var t = this;
-    this.timeout = window.setTimeout(function () { t._tick(); }, 100);
+    this.timeout = window.setTimeout(_tick, 100);
   };
 
   /**
    * Called by Tock internally - use start() instead
    */
   function _startTimer() {
-    this.start_time = Date.now();
-    this.time = 0;
-    this.elapsed = '0.0';
-    this.go = true;
+    start_time = Date.now();
+    time = 0;
+    elapsed = '0.0';
+    go = true;
     var t = this;
-    this.timeout = window.setTimeout(function () { t._tick(); }, 100);
-  };
+    this.timeout = window.setTimeout(_tick, 100);
+  }
   
-  return [
-    start, 
-    stop,
-    reset,
-    lap,
-    msToTime,
-    timeToMs
-  ];
-})();
+  return {
+    start: start, 
+    stop: stop,
+    reset: reset,
+    lap: lap,
+    msToTime: msToTime,
+    timeToMS: timeToMS
+  };
+});

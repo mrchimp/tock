@@ -14,7 +14,7 @@
     <script>
         window.onload = function() {
 
-            var timer = new Tock({
+            var timer = Tock({
                 callback: function () {
                     $('#clockface').val(timer.msToTime(timer.lap()));
                 }
@@ -38,9 +38,7 @@
                 $('#laptimes').html('');
             });
 
-      
-      
-            var countdown = new Tock({
+            var countdown = Tock({
                 countdown: true,
                 interval: 251,
                 callback: function () {
