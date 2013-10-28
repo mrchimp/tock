@@ -4,12 +4,19 @@
 *    sitepoint.com/creating-accurate-timers-in-javascript/
 */
 var Tock = (function(options) {
+
+  Tock.instances = (Tock.instances || 0) + 1;
+
   var go = false,
       interval = options.interval || 10,
       countdown = options.countdown || false,
       final_time = 0,
+      start_time = 0,
+      time = 0,
+      elapsed = 0,
       callback = options.callback,
-      complete = options.complete;
+      complete = options.complete,
+      prefix = "Tock" + Tock.instances;
 
   /**
    * Reset the clock
@@ -68,6 +75,7 @@ var Tock = (function(options) {
     } else {
       if (go) {
         timeout = window.setTimeout(_tick, next_interval_in);
+        timeout = prefix + timeout;
       }
     }
   }
@@ -78,7 +86,7 @@ var Tock = (function(options) {
   function stop() {
     go = false;
     final_time = (Date.now() - start_time);
-    window.clearTimeout(timeout);
+    window.clearTimeout(timeout.replace(prefix));
   }
   
   /**
