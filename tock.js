@@ -67,8 +67,8 @@ var Tock = (function(options) {
     }
 
     if (next_interval_in <= 0) {
-      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval)
-      time += missed_ticks * interval
+      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
+      time += missed_ticks * interval;
       if (go) {
         _tick();
       }
@@ -148,8 +148,7 @@ var Tock = (function(options) {
     var ms = new Date(time).getTime();
 
     if (!ms) {
-      var time_split = time.split(':'),
-          ms;
+      var time_split = time.split(':');
 
       ms = parseInt(time_split[0], 10) * 60000;
 
@@ -177,7 +176,7 @@ var Tock = (function(options) {
     go = true;
     var t = this;
     this.timeout = window.setTimeout(_tick, 100);
-  };
+  }
 
   /**
    * Called by Tock internally - use start() instead
@@ -192,7 +191,7 @@ var Tock = (function(options) {
   }
   
   return {
-    start: start, 
+    start: start,
     stop: stop,
     reset: reset,
     lap: lap,
