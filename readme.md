@@ -2,17 +2,11 @@
 
 A javscript timer/countdown clock. 
 
-Demo: http://deviouschimp.co.uk/misc/tock
+[View Demo](http://deviouschimp.co.uk/misc/tock)
 
 Based on an idea by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
-Status: Working
-
-Todo: 
- * Add timed events.
- * Improve msToTime() implementation
- * Add custom complete conditions - x number of ticks for example
 
 # What's so good about it? #
 
