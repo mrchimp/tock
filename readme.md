@@ -7,6 +7,7 @@ A javscript timer/countdown clock.
 Based on an idea by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
+ > Note: I have renamed the repo from Tock to tock. Sorry for any inconvenience.
 
 # What's so good about it? #
 
