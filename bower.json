@@ -1,0 +1,11 @@
+{
+	"name": "tock",
+	"version": "1.0.1",
+	"main": "./tock.min.js",
+	"ignore": [
+		"**/.md",
+		"**/.html",
+		"**/.*",
+		"**/.json"
+	]
+}
