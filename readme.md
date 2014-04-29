@@ -114,3 +114,8 @@ You could also create a reset button if you *are* using a countdown clock, but t
    * "MM:SS"
    * "MM:SS:ms"
    * "yyyy-mm-dd HH:MM:SS.ms"
+
+
+# License #
+
+MIT License.
