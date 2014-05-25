@@ -3,7 +3,7 @@
 <head>
     <title>Tock</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="tock.min.js"></script>
+    <script src="tock.js"></script>
     <style>
         #laptimes {
             border: 1px solid #ddd;
@@ -26,6 +26,10 @@
 
             $('#lap').on('click', function () {
                 $('#laptimes').append(timer.msToTime(timer.lap()) + '<br>');
+            });
+
+            $('#pause').on('click', function () {
+                timer.pause();
             });
 
             $('#stop').on('click', function () {
@@ -53,12 +57,17 @@
                 countdown.start(countdown.timeToMS($('#countdown_clock').val()));
             });
 
+            $('#pauseCountdown').on('click', function () {
+                countdown.pause();
+            });
+
             $('#stopCountdown').on('click', function () {
                 countdown.stop();
             });
 
             $('#resetCountdown').on('click', function () {
-                countdown.reset();
+                countdown.stop();
+                $('#countdown_clock').val('10:00');
             });
         }
     </script>
@@ -75,6 +84,7 @@
         <p>
             <button id="start">Start</button>
             <button id="lap">Lap</button>
+            <button id="pause">Pause</button>
             <button id="stop">Stop</button>
             <button id="reset">Reset</button>
         </p>
@@ -91,6 +101,7 @@
         <p>
             <button id="startCountdown">Start</button> 
             <button id="stopCountdown">Stop</button> 
+            <button id="pauseCountdown">Pause</button> 
             <button id="resetCountdown">Reset</button> 
             <input id="countdown_clock" placeholder="00:00" value="10:00">
         </p>

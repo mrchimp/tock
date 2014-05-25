@@ -10,8 +10,10 @@ var Tock = (function(options) {
   var go = false,
       interval = options.interval || 10,
       countdown = options.countdown || false,
-      final_time = 0,
       start_time = 0,
+      pause_time = 0,
+      final_time = 0,
+      duration_ms = 0,
       time = 0,
       elapsed = 0,
       callback = options.callback,
@@ -35,10 +37,12 @@ var Tock = (function(options) {
    * Start the clock.
    */
   function start(time) {
+    start_time = time;
+
     if (countdown) {
       _startCountdown(time);
     } else {
-      _startTimer();
+      _startTimer(0);
     }
   }
   
@@ -88,6 +92,27 @@ var Tock = (function(options) {
     final_time = (Date.now() - start_time);
     window.clearTimeout(timeout.replace(prefix));
   }
+
+  /**
+   * Stop/start the clock.
+   */
+  function pause() {
+    if (go) {
+      pause_time = lap();
+      stop();
+    } else {
+      if (countdown) {
+        if (pause_time) {
+          _startCountdown(pause_time);
+        }
+      } else {
+        if (pause_time) {
+          console.log(pause_time);
+          _startTimer(pause_time);
+        }
+      }
+    }
+  }
   
   /**
    * Get the current clock time in ms.
@@ -106,7 +131,7 @@ var Tock = (function(options) {
       return now;
     }
 
-    return final_time;
+    return pause_time || final_time;
   }
   
   /**
@@ -170,32 +195,34 @@ var Tock = (function(options) {
   function _startCountdown(duration) {
     duration_ms = duration;
     start_time = Date.now();
-    end_time = this.start_time + this.duration;
+    end_time = this.start_time + this.duration_ms;
     time = 0;
     elapsed = '0.0';
     go = true;
-    var t = this;
+    // var t = this;
     this.timeout = window.setTimeout(_tick, 100);
   }
 
   /**
    * Called by Tock internally - use start() instead
    */
-  function _startTimer() {
-    start_time = Date.now();
+  function _startTimer(start_offset) {
+    start_time = Date.now() + start_offset;
     time = 0;
     elapsed = '0.0';
     go = true;
-    var t = this;
+    // var t = this;
     this.timeout = window.setTimeout(_tick, 100);
   }
   
   return {
     start: start,
+    pause: pause,
     stop: stop,
     reset: reset,
     lap: lap,
     msToTime: msToTime,
     timeToMS: timeToMS
   };
+
 });
