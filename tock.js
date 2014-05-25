@@ -203,7 +203,8 @@ var Tock = (function(options) {
     time = 0;
     elapsed = '0.0';
     go = true;
-    this.timeout = window.setTimeout(_tick, 100);
+    _tick();
+    this.timeout = window.setTimeout(_tick, interval);
   }
 
   /**
@@ -214,7 +215,8 @@ var Tock = (function(options) {
     time = 0;
     elapsed = '0.0';
     go = true;
-    this.timeout = window.setTimeout(_tick, 100);
+    _tick();
+    this.timeout = window.setTimeout(_tick, interval);
   }
   
   return {
