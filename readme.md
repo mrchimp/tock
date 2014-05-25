@@ -44,13 +44,12 @@ This will give you a clock that will count up from 00:00 when the start() method
 
 For more control we can pass in some options. *Note that all options are... optional.*
 
-    var options = {
-        countdown: true,
-        interval: 10,
-        callback: someCallbackFunction,
-        complete: someCompleteFunction
-    }
-    var timer = new Tock(options);
+    var timer = new Tock({
+      countdown: true,
+      interval: 10,
+      callback: someCallbackFunction,
+      complete: someCompleteFunction
+    });
 
 
 #### Options ####
@@ -62,16 +61,16 @@ For more control we can pass in some options. *Note that all options are... opti
 
 #### Callback functions ####
 
-The callback option is a function that will be called once every *interval* milliseconds.
+The callback option is a function that will be called once every `interval` milliseconds.
 
-Here we'll use the *lap()* method to get the current clock time (in milliseconds). We'll then pass that through *msToTime()* to format it nicely before displaying it in the *input* field.
+Here we'll use the `lap()` method to get the current clock time (in milliseconds). We'll then pass that through `msToTime()` to format it nicely before displaying it in the `input` field.
 
     callback: function () {
         var current_time = timer.msToTime(timer.lap());
         $('#clock').val(current_time);
     }
 
-As we are have set *countdown* to *true* we can also pass in a function to call once the countdown reaches zero.
+As we are have set `countdown` to `true` we can also pass in a function to call once the countdown reaches zero.
 
     complete: function () {
         alert("Time's up!");
@@ -101,16 +100,21 @@ You could also create a reset button if you *are* using a countdown clock, but t
 
 # Methods #
 
- * reset()
  * start(time)
    * *time* is only needed if using countdown clock.
       Should be an integer in milliseconds.
  * stop()
+   * Stops the clock.
+ * pause()
+   * Stop the clock if it's running, continue clock if paused.
+ * reset()
+   * Restart times to zero. Countdown clocks still need a duration to be passed to `start()` after `reset()` is called.
  * lap()
+   * Returns elapsed time in milliseconds.
  * msToTime(ms)
    * Note: this is rudimentary - won't handle > 1 hour
  * timeToMS(time)
-   * Time should be a string of form:
+   Time should be a string of form:
    * "MM:SS"
    * "MM:SS:ms"
    * "yyyy-mm-dd HH:MM:SS.ms"
