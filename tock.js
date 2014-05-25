@@ -7,18 +7,18 @@ var Tock = (function(options) {
 
   Tock.instances = (Tock.instances || 0) + 1;
 
-  var go = false,
-      interval = options.interval || 10,
-      countdown = options.countdown || false,
-      start_time = 0,
-      pause_time = 0,
-      final_time = 0,
+  var go          = false,
+      interval    = options.interval || 10,
+      countdown   = options.countdown || false,
+      start_time  = 0,
+      pause_time  = 0,
+      final_time  = 0,
       duration_ms = 0,
-      time = 0,
-      elapsed = 0,
-      callback = options.callback,
-      complete = options.complete,
-      prefix = "Tock" + Tock.instances;
+      time        = 0,
+      elapsed     = 0,
+      callback    = options.callback,
+      complete    = options.complete,
+      prefix      = "Tock" + Tock.instances;
 
   /**
    * Reset the clock
@@ -73,6 +73,7 @@ var Tock = (function(options) {
     if (next_interval_in <= 0) {
       missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
       time += missed_ticks * interval;
+
       if (go) {
         _tick();
       }
@@ -89,8 +90,14 @@ var Tock = (function(options) {
    */
   function stop() {
     go = false;
-    final_time = (Date.now() - start_time);
+
     window.clearTimeout(timeout.replace(prefix));
+
+    if (countdown) {
+      final_time = duration_ms - time;
+    } else {
+      final_time = (Date.now() - start_time);
+    }
   }
 
   /**
@@ -101,13 +108,10 @@ var Tock = (function(options) {
       pause_time = lap();
       stop();
     } else {
-      if (countdown) {
-        if (pause_time) {
+      if (pause_time) {
+        if (countdown) {
           _startCountdown(pause_time);
-        }
-      } else {
-        if (pause_time) {
-          console.log(pause_time);
+        } else {
           _startTimer(pause_time);
         }
       }
@@ -195,11 +199,10 @@ var Tock = (function(options) {
   function _startCountdown(duration) {
     duration_ms = duration;
     start_time = Date.now();
-    end_time = this.start_time + this.duration_ms;
+    end_time = start_time + duration_ms;
     time = 0;
     elapsed = '0.0';
     go = true;
-    // var t = this;
     this.timeout = window.setTimeout(_tick, 100);
   }
 
@@ -207,11 +210,10 @@ var Tock = (function(options) {
    * Called by Tock internally - use start() instead
    */
   function _startTimer(start_offset) {
-    start_time = Date.now() + start_offset;
+    start_time = Date.now() - start_offset;
     time = 0;
     elapsed = '0.0';
     go = true;
-    // var t = this;
     this.timeout = window.setTimeout(_tick, 100);
   }
   
@@ -224,5 +226,4 @@ var Tock = (function(options) {
     msToTime: msToTime,
     timeToMS: timeToMS
   };
-
 });
