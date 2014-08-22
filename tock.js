@@ -71,16 +71,16 @@ var Tock = (function(options) {
     }
 
     if (next_interval_in <= 0) {
-      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
-      time += missed_ticks * interval;
+      window.missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
+      time += window.missed_ticks * interval;
 
       if (go) {
         _tick();
       }
     } else {
       if (go) {
-        timeout = window.setTimeout(_tick, next_interval_in);
-        timeout = prefix + timeout;
+        window.timeout = window.setTimeout(_tick, next_interval_in);
+        window.timeout = prefix + timeout;
       }
     }
   }
@@ -91,7 +91,7 @@ var Tock = (function(options) {
   function stop() {
     go = false;
 
-    window.clearTimeout(timeout.replace(prefix));
+    window.clearTimeout(window.timeout.replace(prefix));
 
     if (countdown) {
       final_time = duration_ms - time;
