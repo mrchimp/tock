@@ -3,22 +3,28 @@
 * Based on code by James Edwards:
 *    sitepoint.com/creating-accurate-timers-in-javascript/
 */
+
+// Implements Date.now() for ie lt 9
+Date.now = Date.now || function() { return +new Date; };
+
 var Tock = (function(options) {
 
   Tock.instances = (Tock.instances || 0) + 1;
 
-  var go          = false,
-      interval    = options.interval || 10,
-      countdown   = options.countdown || false,
-      start_time  = 0,
-      pause_time  = 0,
-      final_time  = 0,
-      duration_ms = 0,
-      time        = 0,
-      elapsed     = 0,
-      callback    = options.callback,
-      complete    = options.complete,
-      prefix      = "Tock" + Tock.instances;
+  var go           = false,
+      timeout      = null,
+      missed_ticks = null,
+      interval     = options.interval || 10,
+      countdown    = options.countdown || false,
+      start_time   = 0,
+      pause_time   = 0,
+      final_time   = 0,
+      duration_ms  = 0,
+      time         = 0,
+      elapsed      = 0,
+      callback     = options.callback,
+      complete     = options.complete,
+      prefix       = "Tock" + Tock.instances;
 
   /**
    * Reset the clock
@@ -45,7 +51,7 @@ var Tock = (function(options) {
       _startTimer(0);
     }
   }
-  
+
   /**
    * Called every tick for countdown clocks.
    * i.e. once every this.interval ms
