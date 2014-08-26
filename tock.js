@@ -7,18 +7,20 @@ var Tock = (function(options) {
 
   Tock.instances = (Tock.instances || 0) + 1;
 
-  var go          = false,
-      interval    = options.interval || 10,
-      countdown   = options.countdown || false,
-      start_time  = 0,
-      pause_time  = 0,
-      final_time  = 0,
-      duration_ms = 0,
-      time        = 0,
-      elapsed     = 0,
-      callback    = options.callback,
-      complete    = options.complete,
-      prefix      = "Tock" + Tock.instances;
+  var go           = false,
+      timeout      = null,
+      missed_ticks = null,
+      interval     = options.interval || 10,
+      countdown    = options.countdown || false,
+      start_time   = 0,
+      pause_time   = 0,
+      final_time   = 0,
+      duration_ms  = 0,
+      time         = 0,
+      elapsed      = 0,
+      callback     = options.callback,
+      complete     = options.complete,
+      prefix       = "Tock" + Tock.instances;
 
   /**
    * Reset the clock
@@ -45,7 +47,7 @@ var Tock = (function(options) {
       _startTimer(0);
     }
   }
-  
+
   /**
    * Called every tick for countdown clocks.
    * i.e. once every this.interval ms
@@ -71,16 +73,16 @@ var Tock = (function(options) {
     }
 
     if (next_interval_in <= 0) {
-      window.missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
-      time += window.missed_ticks * interval;
+      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
+      time += missed_ticks * interval;
 
       if (go) {
         _tick();
       }
     } else {
       if (go) {
-        window.timeout = window.setTimeout(_tick, next_interval_in);
-        window.timeout = prefix + timeout;
+        timeout = window.setTimeout(_tick, next_interval_in);
+        timeout = prefix + timeout;
       }
     }
   }
@@ -91,7 +93,7 @@ var Tock = (function(options) {
   function stop() {
     go = false;
 
-    window.clearTimeout(window.timeout.replace(prefix));
+    window.clearTimeout(timeout.replace(prefix));
 
     if (countdown) {
       final_time = duration_ms - time;
