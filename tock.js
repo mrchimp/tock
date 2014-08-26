@@ -3,6 +3,10 @@
 * Based on code by James Edwards:
 *    sitepoint.com/creating-accurate-timers-in-javascript/
 */
+
+// Implements Date.now() for ie lt 9
+Date.now = Date.now || function() { return +new Date; };
+
 var Tock = (function(options) {
 
   Tock.instances = (Tock.instances || 0) + 1;
