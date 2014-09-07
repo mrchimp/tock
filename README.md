@@ -1,5 +1,7 @@
 # Tock #
 
+[![Bower version](https://badge.fury.io/bo/tock.svg)](http://badge.fury.io/bo/tock)
+
 A javscript timer/countdown clock. 
 
 [View Demo](http://deviouschimp.co.uk/misc/tock)
