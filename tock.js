@@ -5,7 +5,7 @@
 */
 
 // Implements Date.now() for ie lt 9
-Date.now = Date.now || function() { return +new Date; };
+Date.now = Date.now || function() { return +new Date(); };
 
 var Tock = (function(options) {
 
@@ -23,8 +23,7 @@ var Tock = (function(options) {
       time         = 0,
       elapsed      = 0,
       callback     = options.callback,
-      complete     = options.complete,
-      prefix       = "Tock" + Tock.instances;
+      complete     = options.complete;
 
   /**
    * Reset the clock
@@ -77,16 +76,15 @@ var Tock = (function(options) {
     }
 
     if (next_interval_in <= 0) {
-      missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
-      time += missed_ticks * interval;
+      this.missed_ticks = Math.floor(Math.abs(next_interval_in) / interval);
+      time += this.missed_ticks * interval;
 
       if (go) {
         _tick();
       }
     } else {
       if (go) {
-        timeout = window.setTimeout(_tick, next_interval_in);
-        timeout = prefix + timeout;
+        this.timeout = window.setTimeout(_tick, next_interval_in);
       }
     }
   }
@@ -97,7 +95,7 @@ var Tock = (function(options) {
   function stop() {
     go = false;
 
-    window.clearTimeout(timeout.replace(prefix));
+    window.clearTimeout(this.timeout);
 
     if (countdown) {
       final_time = duration_ms - time;
