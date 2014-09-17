@@ -32,8 +32,8 @@ Date.now = Date.now || function() { return +new Date(); };
         duration_ms  = 0,
         time         = 0,
         elapsed      = 0,
-        callback     = options.callback,
-        complete     = options.complete;
+        callback     = options.callback || function(){},
+        complete     = options.complete || function(){};
 
     /**
      * Reset the clock
@@ -82,7 +82,10 @@ Date.now = Date.now || function() { return +new Date(); };
       if (countdown && (duration_ms - time < 0)) {
         final_time = 0;
         go = false;
+        callback();
+        window.clearTimeout(this.timeout);
         complete();
+        return;
       }
 
       if (next_interval_in <= 0) {
