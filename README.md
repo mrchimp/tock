@@ -121,12 +121,13 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
 # Methods #
 
  * start(time)
-   * *time* is only needed if using countdown clock.
-      Should be an integer in milliseconds.
+   * *time* (optional) can be either a countdown value or a starting value
+     * If a countdown timer then set *time* in milliseconds to count down from
+     * If a starting value then set *time* in Unix time when the timer should be started. For example, if you want the timer to start at 10 seconds then call `start(Date.now() - 10000)`. The `timeToMS()` method is helpful here for converting to milliseconds. Having an arbitrary start time is useful for when a user may want to manually type in a start time.
  * stop()
-   * Stops the clock.
+   * Stops the clock and clears the timeout() from memory.
  * pause()
-   * Stop the clock if it's running, continue clock if paused.
+   * Stop the clock if it's running, continue clock if paused. Keeps the timeout() in memory.
  * reset()
    * Restart times to zero. Countdown clocks still need a duration to be passed to `start()` after `reset()` is called.
  * lap()
@@ -137,7 +138,11 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
    Time should be a string of form:
    * "MM:SS"
    * "MM:SS:ms"
+   * "MM:SS.ms"
+   * "HH:MM:SS"
    * "yyyy-mm-dd HH:MM:SS.ms"
+ * timeToTimecode(time)
+   * returns an HH:MM:SS form from milliseconds
 
 
 # License #
