@@ -21,7 +21,7 @@
             });
 
             $('#start').on('click', function () {
-                timer.start();
+                timer.start(Date.now() - timer.timeToMS($('#clockface').val()));
             });
 
             $('#lap').on('click', function () {
