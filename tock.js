@@ -50,15 +50,26 @@ Date.now = Date.now || function() { return +new Date(); };
 
     /**
      * Start the clock.
+     * accepts a single "time" argument which can be in various forms:
+     ** MM:SS
+     ** MM:SS:ms or MM:SS.ms
+     ** HH:MM:SS
+     ** yyyy-mm-dd HH:MM:SS.ms
      */
+
     function start(time) {
       time = time || 0;
+      
+      if(time) {
+        time = timeToMS(time);
+      }
+
       start_time = time;
 
       if (countdown) {
         _startCountdown(time);
       } else {
-        _startTimer(time);
+        _startTimer(Date.now() - time);
       }
     }
 
@@ -107,9 +118,9 @@ Date.now = Date.now || function() { return +new Date(); };
      * Stop the clock.
      */
     function stop() {
+      pause_time = lap();
       go = false;
-      pause_time = false;
-
+      
       window.clearTimeout(this.timeout);
 
       if (countdown) {
@@ -159,7 +170,7 @@ Date.now = Date.now || function() { return +new Date(); };
     }
 
     /**
-     * Format milliseconds as a string.
+     * Format milliseconds as a MM:SS.ms string.
      */
     function msToTime(ms) {
       if (ms <= 0) {
@@ -189,7 +200,7 @@ Date.now = Date.now || function() { return +new Date(); };
      */
     function msToTimecode(ms) {
       if (ms <= 0) {
-        return "00:00.000";
+        return "00:00:00";
       }
 
       var milliseconds = (ms % 1000).toString(),
@@ -216,28 +227,36 @@ Date.now = Date.now || function() { return +new Date(); };
 
     /**
      * Convert a time string to milliseconds
-     * Todo: handle this a bit better
      *
      * Possible inputs:
      * MM:SS
      * MM:SS:ms or MM:SS.ms
      * HH:MM:SS
      * yyyy-mm-dd HH:MM:SS.ms
+     *
+     * A milliseconds input will return it back for safety
+     * If the input cannot be recognized then 0 is returned
+     *
      */
     function timeToMS(time) {
-      var time_split = time.split(':');
       
-      //if MM:SS
-      if(time.match(/^([0-9][0-9]):([0-9][0-9])$/)) {
+      //if milliseconds integer is input then return it back
+      if(String(time).search (/^\s*(\+|-)?\d+\s*$/) != -1) {
+        return time;
+      }
+      
+      var time_split = time.split(':'); 
+
+      if(time.match(/^([0-9][0-9]):([0-9][0-9])$/)) { //if MM:SS
         ms = parseInt(time_split[0], 10) * 60000;
         ms += parseInt(time_split[1], 10) * 1000;
       }
-      else if(time.match(/^([0-9][0-9]):([0-9][0-9]):([0-9][0-9][0-9][0-9])$/)) { //if MM:SS:ms
+      else if(time.match(/^([0-9][0-9]):([0-9][0-9]):([0-9][0-9][0-9])$/)) { //if MM:SS:ms (e.g. 10:10:458)
         ms = parseInt(time_split[0], 10) * 60000;
         ms += parseInt(time_split[1], 10) * 1000;
         ms += parseInt(time_split[2], 10);
       }
-      else if(time.match(/^([0-9][0-9]):([0-9][0-9])\.([0-9][0-9][0-9])$/)) { //if MM:SS.ms
+      else if(time.match(/^([0-9][0-9]):([0-9][0-9])\.([0-9][0-9][0-9])$/)) { //if MM:SS.ms (e.g. 10:10.458)
         ms = parseInt(time_split[0], 10) * 60000;
         minute_ms_split = time_split[1].split('.');
         ms += parseInt(minute_ms_split[0], 10) * 1000;
@@ -248,8 +267,11 @@ Date.now = Date.now || function() { return +new Date(); };
         ms += parseInt(time_split[1], 10) * 1000 * 60;
         ms += parseInt(time_split[2], 10) * 1000;
       }
-      else { //if yyyy-mm-dd HH:MM:SS.ms
+      else if(time.match(/^([0-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) ([0-9][0-9]):([0-9][0-9]):([0-9][0-9])$/)){ //if yyyy-mm-dd HH:MM:SS.ms
         ms = new Date(time).getTime();
+      }
+      else { //could not recognize input, so start from 0
+        ms = 0;
       }
 
       return ms;
