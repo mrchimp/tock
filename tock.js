@@ -28,6 +28,7 @@ Date.now = Date.now || function() { return +new Date(); };
         countdown    = options.countdown || false,
         start_time   = 0,
         pause_time   = 0,
+        offset_time  = 0,
         final_time   = 0,
         duration_ms  = 0,
         time         = 0,
@@ -73,7 +74,9 @@ Date.now = Date.now || function() { return +new Date(); };
 
       var t = this,
           diff = (Date.now() - start_time) - time,
-          next_interval_in = interval - diff;
+          next_interval_in = interval - diff + offset_time;
+          
+      offset_time = 0;
 
       if (callback !== undefined) {
         callback(this);
@@ -133,6 +136,14 @@ Date.now = Date.now || function() { return +new Date(); };
           }
         }
       }
+    }
+    
+    /**
+     * Add offset to next tick of clock
+     * may be negative or positive
+     */
+    function offset(ms) {
+      offset_time += ms;
     }
 
     /**
