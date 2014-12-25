@@ -216,7 +216,6 @@ Date.now = Date.now || function() { return +new Date(); };
     function _startCountdown(duration) {
       duration_ms = duration;
       start_time = Date.now();
-      end_time = start_time + duration_ms;
       time = 0;
       elapsed = '0.0';
       go = true;
