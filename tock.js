@@ -40,7 +40,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
     if ( Math.round(this.elapsed) === this.elapsed ) { this.elapsed += '.0'; }
 
     var diff = (Date.now() - this.start_time) - this.time,
-        next_interval_in = this.interval - diff;
+        next_interval_in = diff > 0 ? this.interval - diff : this.interval;
 
     if ( this.callback !== undefined ) {
       this.callback(this);
@@ -90,7 +90,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
     this.elapsed = '0.0';
     this.go = true;
     _tick.call(this);
-    this.timeout = window.setTimeout(_tick.bind(this), this.interval);
   }
 
   var Tock = function (options) {
