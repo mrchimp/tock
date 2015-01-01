@@ -50,14 +50,26 @@ Date.now = Date.now || function() { return +new Date(); };
 
     /**
      * Start the clock.
+     * accepts a single "time" argument which can be in various forms:
+     ** MM:SS
+     ** MM:SS:ms or MM:SS.ms
+     ** HH:MM:SS
+     ** yyyy-mm-dd HH:MM:SS.ms
      */
+
     function start(time) {
+      time = time || 0;
+      
+      if(time) {
+        time = timeToMS(time);
+      }
+
       start_time = time;
 
       if (countdown) {
         _startCountdown(time);
       } else {
-        _startTimer(0);
+        _startTimer(Date.now() - time);
       }
     }
 
@@ -106,8 +118,9 @@ Date.now = Date.now || function() { return +new Date(); };
      * Stop the clock.
      */
     function stop() {
+      pause_time = lap();
       go = false;
-
+      
       window.clearTimeout(this.timeout);
 
       if (countdown) {
@@ -115,6 +128,7 @@ Date.now = Date.now || function() { return +new Date(); };
       } else {
         final_time = (Date.now() - start_time);
       }
+
     }
 
     /**
@@ -129,7 +143,7 @@ Date.now = Date.now || function() { return +new Date(); };
           if (countdown) {
             _startCountdown(pause_time);
           } else {
-            _startTimer(pause_time);
+            _startTimer(Date.now() - pause_time);
           }
         }
       }
@@ -156,7 +170,7 @@ Date.now = Date.now || function() { return +new Date(); };
     }
 
     /**
-     * Format milliseconds as a string.
+     * Format milliseconds as a MM:SS.ms string.
      */
     function msToTime(ms) {
       if (ms <= 0) {
@@ -182,29 +196,82 @@ Date.now = Date.now || function() { return +new Date(); };
     }
 
     /**
+     * Format milliseconds as HH:MM:SS
+     */
+    function msToTimecode(ms) {
+      if (ms <= 0) {
+        return "00:00:00";
+      }
+
+      var milliseconds = (ms % 1000).toString(),
+          seconds = Math.floor((ms / 1000) % 60).toString(),
+          minutes = Math.floor((ms / (60 * 1000)) % 60).toString(),
+          hours = Math.floor((ms / (60 * 60 * 1000)) % 60).toString();
+
+      if (milliseconds.length === 1) {
+        milliseconds = '00' + milliseconds;
+      } else if (milliseconds.length === 2) {
+        milliseconds = '0' + milliseconds;
+      }
+      if (seconds.length === 1) {
+        seconds = '0' + seconds;
+      }
+      if (minutes.length === 1) {
+        minutes = '0' + minutes;
+      }
+      if (hours.length === 1 ) {
+        hours = '0' + hours;
+      }
+      return hours + ":" + minutes + ":" + seconds;
+    }
+
+    /**
      * Convert a time string to milliseconds
-     * Todo: handle this a bit better
      *
      * Possible inputs:
      * MM:SS
-     * MM:SS:ms
+     * MM:SS:ms or MM:SS.ms
+     * HH:MM:SS
      * yyyy-mm-dd HH:MM:SS.ms
+     *
+     * A milliseconds input will return it back for safety
+     * If the input cannot be recognized then 0 is returned
+     *
      */
     function timeToMS(time) {
-      var ms = new Date(time).getTime();
+      
+      //if milliseconds integer is input then return it back
+      if(String(time).search (/^\s*(\+|-)?\d+\s*$/) != -1) {
+        return time;
+      }
+      
+      var time_split = time.split(':'); 
 
-      if (!ms) {
-        var time_split = time.split(':');
-
+      if(time.match(/^([0-9][0-9]):([0-9][0-9])$/)) { //if MM:SS
         ms = parseInt(time_split[0], 10) * 60000;
-
-        if (time_split.length > 1) {
-          ms += parseInt(time_split[1], 10) * 1000;
-        }
-
-        if (time_split.length > 2) {
-          ms += parseInt(time_split[2], 10);
-        }
+        ms += parseInt(time_split[1], 10) * 1000;
+      }
+      else if(time.match(/^([0-9][0-9]):([0-9][0-9]):([0-9][0-9][0-9])$/)) { //if MM:SS:ms (e.g. 10:10:458)
+        ms = parseInt(time_split[0], 10) * 60000;
+        ms += parseInt(time_split[1], 10) * 1000;
+        ms += parseInt(time_split[2], 10);
+      }
+      else if(time.match(/^([0-9][0-9]):([0-9][0-9])\.([0-9][0-9][0-9])$/)) { //if MM:SS.ms (e.g. 10:10.458)
+        ms = parseInt(time_split[0], 10) * 60000;
+        minute_ms_split = time_split[1].split('.');
+        ms += parseInt(minute_ms_split[0], 10) * 1000;
+        ms += parseInt(minute_ms_split[1], 10);
+      }
+      else if(time.match(/^([0-9][0-9]):([0-9][0-9]):([0-9][0-9])$/)) { //if HH:MM:SS
+        ms = parseInt(time_split[0], 10) * 1000 * 60 * 60;
+        ms += parseInt(time_split[1], 10) * 1000 * 60;
+        ms += parseInt(time_split[2], 10) * 1000;
+      }
+      else if(time.match(/^([0-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) ([0-9][0-9]):([0-9][0-9]):([0-9][0-9])$/)){ //if yyyy-mm-dd HH:MM:SS.ms
+        ms = new Date(time).getTime();
+      }
+      else { //could not recognize input, so start from 0
+        ms = 0;
       }
 
       return ms;
@@ -228,7 +295,7 @@ Date.now = Date.now || function() { return +new Date(); };
      * Called by Tock internally - use start() instead
      */
     function _startTimer(start_offset) {
-      start_time = Date.now() - start_offset;
+      start_time = start_offset || Date.now();
       time = 0;
       elapsed = '0.0';
       go = true;
@@ -243,6 +310,7 @@ Date.now = Date.now || function() { return +new Date(); };
       reset: reset,
       lap: lap,
       msToTime: msToTime,
+      msToTimecode: msToTimecode,
       timeToMS: timeToMS
     };
   });

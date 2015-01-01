@@ -27,7 +27,7 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 
 * Pure Javascript - no dependencies
 * Self-correcting time based on the system clock - won't go out of time unlike clocks based solely on setInterval or setTimeout (see the link above).
-* It can be used to count up from 0:00 or down from a given time. 
+* It can be used to count up from any arbitrary time (or 0:00) or countdown from a given time. 
 * It can call a callback function every tick (10 milliseconds) and (for countdown clocks) when the clock reaches 0:00.
 * It's about as accurate a clock as you can get with Javascript.
 
@@ -121,12 +121,20 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
 # Methods #
 
  * start(time)
-   * *time* is only needed if using countdown clock.
-      Should be an integer in milliseconds.
+   * *time* (optional) can be either a countdown value or a starting value.
+     * If a countdown timer then set *time* to count down from.
+     * If a starting value then set *time* to the desired start time to count up from.
+     * For both timer types the following time formats are possible:
+        * "MM:SS"
+        * "MM:SS:ms"
+        * "MM:SS.ms"
+        * "HH:MM:SS"
+        * "yyyy-mm-dd HH:MM:SS.ms"
+        * milliseconds
  * stop()
-   * Stops the clock.
+   * Stops the clock and clears the timeout() from memory.
  * pause()
-   * Stop the clock if it's running, continue clock if paused.
+   * Stop the clock if it's running, continue clock if paused. Keeps the timeout() in memory.
  * reset()
    * Restart times to zero. Countdown clocks still need a duration to be passed to `start()` after `reset()` is called.
  * lap()
@@ -137,7 +145,12 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
    Time should be a string of form:
    * "MM:SS"
    * "MM:SS:ms"
+   * "MM:SS.ms"
+   * "HH:MM:SS"
    * "yyyy-mm-dd HH:MM:SS.ms"
+   * If the input cannot be recognized as one of the above then 0 is returned
+ * timeToTimecode(time)
+   * returns an HH:MM:SS form from milliseconds
 
 
 # License #
