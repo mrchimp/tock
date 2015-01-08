@@ -39,10 +39,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
 
     if ( Math.round(this.elapsed) === this.elapsed ) { this.elapsed += '.0'; }
 
-    if ( this.callback !== undefined ) {
-      this.callback(this);
-    }
-
     if ( this.countdown && (this.duration_ms - this.time < 0) ) {
       this.final_time = 0;
       this.go = false;
@@ -50,6 +46,9 @@ if ( typeof Function.prototype.bind != 'function' ) {
       window.clearTimeout(this.timeout);
       this.complete(this);
       return;
+    }
+    else {
+      this.callback(this);
     }
 
     var diff = (Date.now() - this.start_time) - this.time,
