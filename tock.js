@@ -213,7 +213,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
    */
   Tock.prototype.msToTime = function (ms) {
     if ( ms <= 0 ) {
-      return "00:00.000";
+      return '00:00.000';
     }
 
     var milliseconds = (ms % 1000).toString(),
@@ -232,7 +232,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
     if ( minutes.length === 1 ) {
       minutes = '0' + minutes;
     }
-    return minutes + ":" + seconds + "." + milliseconds;
+    return minutes + ':' + seconds + '.' + milliseconds;
   };
 
   /**
@@ -240,7 +240,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
    */
   Tock.prototype.msToTimecode = function (ms) {
     if (ms <= 0) {
-      return "00:00:00";
+      return '00:00:00';
     }
 
     var seconds = Math.floor((ms / 1000) % 60).toString(),
@@ -259,7 +259,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
       hours = '0' + hours;
     }
 
-    return hours + ":" + minutes + ":" + seconds;
+    return hours + ':' + minutes + ':' + seconds;
   };
 
   /**
