@@ -33,14 +33,11 @@ if ( typeof Function.prototype.bind != 'function' ) {
    * Called every tick for countdown clocks.
    * i.e. once every this.interval ms
    */
-  function _tick() {
+  function _tick () {
     this.time += this.interval;
     this.elapsed = Math.floor(this.time / this.interval) / 10;
 
     if ( Math.round(this.elapsed) === this.elapsed ) { this.elapsed += '.0'; }
-
-    var diff = (Date.now() - this.start_time) - this.time,
-        next_interval_in = diff > 0 ? this.interval - diff : this.interval;
 
     if ( this.callback !== undefined ) {
       this.callback(this);
@@ -54,6 +51,9 @@ if ( typeof Function.prototype.bind != 'function' ) {
       this.complete(this);
       return;
     }
+
+    var diff = (Date.now() - this.start_time) - this.time,
+        next_interval_in = diff > 0 ? this.interval - diff : this.interval;
 
     if ( next_interval_in <= 0 ) {
       this.missed_ticks = Math.floor(Math.abs(next_interval_in) / this.interval);
@@ -71,26 +71,34 @@ if ( typeof Function.prototype.bind != 'function' ) {
   /**
    * Called by Tock internally - use start() instead
    */
-  function _startCountdown(duration) {
+  function _startCountdown (duration) {
     this.duration_ms = duration;
     this.start_time = Date.now();
     this.time = 0;
     this.elapsed = '0.0';
     this.go = true;
     _tick.call(this);
-    this.timeout = window.setTimeout(_tick.bind(this), this.interval);
   }
 
   /**
    * Called by Tock internally - use start() instead
    */
-  function _startTimer(start_offset) {
-    this.start_time = Date.now() - start_offset;
+  function _startTimer (start_offset) {
+    this.start_time = start_offset || Date.now();
     this.time = 0;
     this.elapsed = '0.0';
     this.go = true;
     _tick.call(this);
   }
+
+  var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
+      MM_SS_RE                  = /^([0-9]{2}):([0-9]{2})$/,
+      MM_SS_ms_OR_HH_MM_SS_RE   = /^([0-9]{2}):([0-9]{2})(?::|\.)([0-9]{2,3})$/,
+      /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
+       * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
+       * and the date string is also suffixed with a `Z` denoting UTC timezone.
+       */
+      yyyy_mm_dd_HH_MM_SS_ms_RE = /^([0-9]{4})-([0-1][0-9])-([0-3][0-9])(?:\s|T)([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{3})Z?)?$/;
 
   var Tock = function (options) {
 
@@ -126,14 +134,22 @@ if ( typeof Function.prototype.bind != 'function' ) {
 
   /**
    * Start the clock.
+   * accepts a single "time" argument which can be in various forms:
+   ** MM:SS
+   ** MM:SS:ms or MM:SS.ms
+   ** HH:MM:SS
+   ** yyyy-mm-dd HH:MM:SS.ms
+   ** milliseconds
    */
   Tock.prototype.start = function (time) {
+    time = time ? this.timeToMS(time) : 0;
+
     this.start_time = time;
 
     if ( this.countdown ) {
       _startCountdown.call(this, time);
     } else {
-      _startTimer.call(this, 0);
+      _startTimer.call(this, Date.now() - time);
     }
   };
 
@@ -141,6 +157,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
    * Stop the clock.
    */
   Tock.prototype.stop = function () {
+    this.pause_time = this.lap();
     this.go = false;
 
     window.clearTimeout(this.timeout);
@@ -165,7 +182,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
         if ( this.countdown ) {
           _startCountdown.call(this, this.pause_time);
         } else {
-          _startTimer.call(this, this.pause_time);
+          _startTimer.call(this, Date.now() - this.pause_time);
         }
       }
     }
@@ -192,10 +209,10 @@ if ( typeof Function.prototype.bind != 'function' ) {
   };
 
   /**
-   * Format milliseconds as a string.
+   * Format milliseconds as a MM:SS.ms string.
    */
   Tock.prototype.msToTime = function (ms) {
-    if ( ms <= 0) {
+    if ( ms <= 0 ) {
       return "00:00.000";
     }
 
@@ -219,28 +236,78 @@ if ( typeof Function.prototype.bind != 'function' ) {
   };
 
   /**
+   * Format milliseconds as HH:MM:SS
+   */
+  Tock.prototype.msToTimecode = function (ms) {
+    if (ms <= 0) {
+      return "00:00:00";
+    }
+
+    var seconds = Math.floor((ms / 1000) % 60).toString(),
+        minutes = Math.floor((ms / (60 * 1000)) % 60).toString(),
+        hours = Math.floor((ms / (60 * 60 * 1000)) % 60).toString();
+
+    if ( seconds.length === 1 ) {
+      seconds = '0' + seconds;
+    }
+
+    if ( minutes.length === 1 ) {
+      minutes = '0' + minutes;
+    }
+
+    if ( hours.length === 1 ) {
+      hours = '0' + hours;
+    }
+
+    return hours + ":" + minutes + ":" + seconds;
+  };
+
+  /**
    * Convert a time string to milliseconds
-   * Todo: handle this a bit better
    *
    * Possible inputs:
    * MM:SS
-   * MM:SS:ms
+   * MM:SS:ms or MM:SS.ms
+   * HH:MM:SS
    * yyyy-mm-dd HH:MM:SS.ms
+   *
+   * A milliseconds input will return it back for safety
+   * If the input cannot be recognized then 0 is returned
+   *
    */
   Tock.prototype.timeToMS = function (time) {
-    var ms = new Date(time).getTime();
 
-    if ( !ms ) {
-      var time_split = time.split(':');
+    //if milliseconds integer is input then return it back
+    if ( MILLISECONDS_RE.test(String(time)) ) {
+      return time;
+    }
 
+    var ms, time_split, match;
+
+    if ( MM_SS_RE.test(time) ) { //if MM:SS
+      time_split = time.split(':');
       ms = parseInt(time_split[0], 10) * 60000;
-
-      if ( time_split.length > 1 ) {
-        ms += parseInt(time_split[1], 10) * 1000;
+      ms += parseInt(time_split[1], 10) * 1000;
+    }
+    else {
+      match = time.match(MM_SS_ms_OR_HH_MM_SS_RE);
+      if ( match ) {
+        if ( match[3].length === 3 ) { //if MM:SS:ms or MM:SS.ms (e.g. 10:10:458 or 10:10.458)
+          ms = parseInt(match[1], 10) * 1000 * 60 * 60;
+          ms += parseInt(match[2], 10) * 1000 * 60;
+          ms += parseInt(match[3], 10) * 1000;
+        }
+        else { //then it's HH:MM:SS
+          ms = parseInt(match[1], 10) * 1000 * 60 * 60;
+          ms += parseInt(match[2], 10) * 1000 * 60;
+          ms += parseInt(match[3], 10) * 1000;
+        }
       }
-
-      if ( time_split.length > 2 ) {
-        ms += parseInt(time_split[2], 10);
+      else if ( yyyy_mm_dd_HH_MM_SS_ms_RE.test(time) ) { //if yyyy-mm-dd HH:MM:SS or yyyy-mm-dd HH:MM:SS.ms or yyyy-mm-ddTHH:MM:SS.msZ
+        ms = new Date(time).getTime();
+      }
+      else { //could not recognize input, so start from 0
+        ms = 0;
       }
     }
 
