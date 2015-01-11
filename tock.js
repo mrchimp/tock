@@ -35,9 +35,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
    */
   function _tick () {
     this.time += this.interval;
-    this.elapsed = Math.floor(this.time / this.interval) / 10;
-
-    if ( Math.round(this.elapsed) === this.elapsed ) { this.elapsed += '.0'; }
 
     if ( this.countdown && (this.duration_ms - this.time < 0) ) {
       this.final_time = 0;
@@ -74,7 +71,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
     this.duration_ms = duration;
     this.start_time = Date.now();
     this.time = 0;
-    this.elapsed = '0.0';
     this.go = true;
     _tick.call(this);
   }
@@ -85,7 +81,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
   function _startTimer (start_offset) {
     this.start_time = start_offset || Date.now();
     this.time = 0;
-    this.elapsed = '0.0';
     this.go = true;
     _tick.call(this);
   }
@@ -114,7 +109,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
     this.final_time   = 0;
     this.duration_ms  = 0;
     this.time         = 0;
-    this.elapsed      = 0;
     this.callback     = options.callback || function () {};
     this.complete     = options.complete || function () {};
   };
@@ -129,7 +123,6 @@ if ( typeof Function.prototype.bind != 'function' ) {
     this.stop();
     this.start_time = 0;
     this.time = 0;
-    this.elapsed = '0.0';
   };
 
   /**
