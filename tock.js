@@ -100,6 +100,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
       yyyy_mm_dd_HH_MM_SS_ms_RE = /^([0-9]{4})-([0-1][0-9])-([0-3][0-9])(?:\s|T)([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{3})Z?)?$/;
 
   var Tock = function (options) {
+    if ( ! (this instanceof Tock) ) return new Tock(options);
 
     Tock.instances = (Tock.instances || 0) + 1;
 
