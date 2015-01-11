@@ -1,6 +1,6 @@
 {
 	"name": "tock",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"main": "./tock.min.js",
 	"ignore": [
 		"**/.md",
