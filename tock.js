@@ -91,13 +91,13 @@ if ( typeof Function.prototype.bind != 'function' ) {
   }
 
   var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
-      MM_SS_RE                  = /^([0-9]{2}):([0-9]{2})$/,
-      MM_SS_ms_OR_HH_MM_SS_RE   = /^([0-9]{2}):([0-9]{2})(?::|\.)([0-9]{2,3})$/,
+      MM_SS_RE                  = /^(\d{2}):(\d{2})$/,
+      MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{2}):(\d{2})(?::|\.)(\d{2,3})$/,
       /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
        * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
        * and the date string is also suffixed with a `Z` denoting UTC timezone.
        */
-      yyyy_mm_dd_HH_MM_SS_ms_RE = /^([0-9]{4})-([0-1][0-9])-([0-3][0-9])(?:\s|T)([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{3})Z?)?$/;
+      yyyy_mm_dd_HH_MM_SS_ms_RE = /^(\d{4})-([0-1]\d)-([0-3]\d)(?:\s|T)(\d{2}):(\d{2}):(\d{2})(?:\.(\d{3})Z?)?$/;
 
   var Tock = function (options) {
     if ( ! (this instanceof Tock) ) return new Tock(options);
