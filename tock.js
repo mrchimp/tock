@@ -95,6 +95,8 @@ if ( typeof Function.prototype.bind != 'function' ) {
       yyyy_mm_dd_HH_MM_SS_ms_RE = /^(\d{4})-([0-1]\d)-([0-3]\d)(?:\s|T)(\d{2}):(\d{2}):(\d{2})(?:\.(\d{3})Z?)?$/;
 
   var Tock = function (options) {
+    options = options || {};
+    
     if ( ! (this instanceof Tock) ) return new Tock(options);
 
     Tock.instances = (Tock.instances || 0) + 1;
