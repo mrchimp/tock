@@ -86,8 +86,8 @@ if ( typeof Function.prototype.bind != 'function' ) {
   }
 
   var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
-      MM_SS_RE                  = /^(\d{2}):(\d{2})$/,
-      MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{2}):(\d{2})(?::|\.)(\d{2,3})$/,
+      MM_SS_RE                  = /^(\d{1,2}):(\d{2})$/,
+      MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{1,2}):(\d{2})(?::|\.)(\d{2,3})$/,
       /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
        * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
        * and the date string is also suffixed with a `Z` denoting UTC timezone.
