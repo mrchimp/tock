@@ -88,6 +88,9 @@ if ( typeof Function.prototype.bind != 'function' ) {
   var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
       MM_SS_RE                  = /^(\d{1,2}):(\d{2})$/,
       MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{1,2}):(\d{2})(?::|\.)(\d{2,3})$/,
+      MS_PER_HOUR               = 3600000,
+      MS_PER_MIN                = 60000,
+      MS_PER_SEC                = 1000,
       /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
        * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
        * and the date string is also suffixed with a `Z` denoting UTC timezone.
@@ -211,9 +214,9 @@ if ( typeof Function.prototype.bind != 'function' ) {
       return '00:00.000';
     }
 
-    var milliseconds = (ms % 1000).toString(),
-        seconds = Math.floor((ms / 1000) % 60).toString(),
-        minutes = Math.floor((ms / (60 * 1000)) % 60).toString();
+    var milliseconds = (ms % MS_PER_SEC).toString(),
+        seconds = Math.floor((ms / MS_PER_SEC) % 60).toString(),
+        minutes = Math.floor((ms / (MS_PER_MIN)) % 60).toString();
 
     if ( milliseconds.length === 1 ) {
       milliseconds = '00' + milliseconds;
@@ -238,9 +241,9 @@ if ( typeof Function.prototype.bind != 'function' ) {
       return '00:00:00';
     }
 
-    var seconds = Math.floor((ms / 1000) % 60).toString(),
-        minutes = Math.floor((ms / (60 * 1000)) % 60).toString(),
-        hours = Math.floor((ms / (60 * 60 * 1000)) % 60).toString();
+    var seconds = Math.floor((ms / MS_PER_SEC) % 60).toString(),
+        minutes = Math.floor((ms / (MS_PER_MIN)) % 60).toString(),
+        MS_PER_HOURs = Math.floor((ms / (MS_PER_HOUR)) % 60).toString();
 
     if ( seconds.length === 1 ) {
       seconds = '0' + seconds;
@@ -250,11 +253,11 @@ if ( typeof Function.prototype.bind != 'function' ) {
       minutes = '0' + minutes;
     }
 
-    if ( hours.length === 1 ) {
-      hours = '0' + hours;
+    if ( MS_PER_HOURs.length === 1 ) {
+      MS_PER_HOURs = '0' + MS_PER_HOURs;
     }
 
-    return hours + ':' + minutes + ':' + seconds;
+    return MS_PER_HOURs + ':' + minutes + ':' + seconds;
   };
 
   /**
@@ -271,38 +274,62 @@ if ( typeof Function.prototype.bind != 'function' ) {
    *
    */
   Tock.prototype.timeToMS = function (time) {
-
     //if milliseconds integer is input then return it back
     if ( MILLISECONDS_RE.test(String(time)) ) {
       return time;
     }
 
-    var ms, time_split, match;
+    var ms,
+        time_split,
+        match,
+        date,
+        now = new Date();
 
-    if ( MM_SS_RE.test(time) ) { //if MM:SS
+    if ( MM_SS_RE.test(time) ) { // If MM:SS
       time_split = time.split(':');
-      ms = parseInt(time_split[0], 10) * 60000;
-      ms += parseInt(time_split[1], 10) * 1000;
-    }
-    else {
+      ms = parseInt(time_split[0], 10) * MS_PER_MIN;
+      ms += parseInt(time_split[1], 10) * MS_PER_SEC;
+    } else {
       match = time.match(MM_SS_ms_OR_HH_MM_SS_RE);
+
       if ( match ) {
-        if ( match[3].length === 3 ) { //if MM:SS:ms or MM:SS.ms (e.g. 10:10:458 or 10:10.458)
-          ms = parseInt(match[1], 10) * 1000 * 60 * 60;
-          ms += parseInt(match[2], 10) * 1000 * 60;
-          ms += parseInt(match[3], 10) * 1000;
+        if ( match[3].length == 3 || parseInt(match[3], 10) > 59 ) { // If MM:SS:ms or MM:SS.ms (e.g. 10:10:458 or 10:10.458)
+          ms = parseInt(match[1], 10) * MS_PER_MIN;
+          ms += parseInt(match[2], 10) * MS_PER_SEC;
+          ms += parseInt(match[3], 10);
+        } else { // Then it's HH:MM:SS
+          ms = parseInt(match[1], 10) * MS_PER_HOUR;
+          ms += parseInt(match[2], 10) * MS_PER_MIN;
+          ms += parseInt(match[3], 10) * MS_PER_SEC;
         }
-        else { //then it's HH:MM:SS
-          ms = parseInt(match[1], 10) * 1000 * 60 * 60;
-          ms += parseInt(match[2], 10) * 1000 * 60;
-          ms += parseInt(match[3], 10) * 1000;
+      } else if ( yyyy_mm_dd_HH_MM_SS_ms_RE.test(time) ) { // If yyyy-mm-dd HH:MM:SS or yyyy-mm-dd HH:MM:SS.ms or yyyy-mm-ddTHH:MM:SS.msZ
+        date = new Date();
+        now = new Date();
+        
+        match = time.match(yyyy_mm_dd_HH_MM_SS_ms_RE);
+        
+        date.setYear(match[1]);
+        date.setMonth(match[2]);
+        date.setDate(match[3]);
+        date.setHours(match[4]);
+        date.setMinutes(match[5]);
+        date.setSeconds(match[6]);
+        
+        if (typeof match[7] !== 'undefined') {
+          date.setMilliseconds(match[7]);
         }
-      }
-      else if ( yyyy_mm_dd_HH_MM_SS_ms_RE.test(time) ) { //if yyyy-mm-dd HH:MM:SS or yyyy-mm-dd HH:MM:SS.ms or yyyy-mm-ddTHH:MM:SS.msZ
-        ms = new Date(time).getTime();
-      }
-      else { //could not recognize input, so start from 0
-        ms = 0;
+
+        ms = Math.max(0, date.getTime() - now.getTime());
+      } else {
+        // Let's try it as a date string
+        now = new Date();
+        ms = Date.parse(time);
+
+        if (!isNaN(ms)) { // Looks ok
+          ms = Math.max(0, ms - now.getTime());
+        } else { // Could not recognize input, so start from 0
+          ms = 0;
+        }
       }
     }
 
