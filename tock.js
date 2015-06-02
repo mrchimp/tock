@@ -140,6 +140,8 @@ if ( typeof Function.prototype.bind != 'function' ) {
    ** milliseconds
    */
   Tock.prototype.start = function (time) {
+    if (this.go) return false;
+
     time = time ? this.timeToMS(time) : 0;
 
     this.start_time = time;
