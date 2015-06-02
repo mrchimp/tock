@@ -1,5 +1,5 @@
 {
-  "name": "tock",
+  "name": "tocktimer",
   "version": "1.0.7",
   "description": "timer object/class. kickass!",
   "main": "tock.js",
