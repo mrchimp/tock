@@ -1,5 +1,6 @@
 
 var assert = require('assert'),
+	fs = require('fs')
 	tock = require('../tock'),
 	timer = new tock();
 
@@ -43,4 +44,32 @@ describe('Tock', function () {
 			assert.equal(timer.msToTime(600001), '10:00.001');
 		});
 	});
+
 });
+
+describe('Meta files', function () {
+	it('package.json should be valid json', function (done) {
+		fs.readFile('package.json', 'utf-8', function (err, data) {
+			if (err) {
+				throw err;
+			}
+
+			var json = JSON.parse(data)
+
+			done();
+		});
+	});
+
+	it('bower.json should be valid json', function (done) {
+		fs.readFile('bower.json', 'utf-8', function (err, data) {
+			if (err) {
+				throw err;
+			}
+
+			var json = JSON.parse(data)
+
+			done();
+		});
+	});
+});
+
