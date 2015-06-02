@@ -143,6 +143,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
     time = time ? this.timeToMS(time) : 0;
 
     this.start_time = time;
+    this.pause_time = 0;
 
     if ( this.countdown ) {
       _startCountdown.call(this, time);
@@ -182,6 +183,8 @@ if ( typeof Function.prototype.bind != 'function' ) {
         } else {
           _startTimer.call(this, Date.now() - this.pause_time);
         }
+
+        this.pause_time = 0;
       }
     }
   };
