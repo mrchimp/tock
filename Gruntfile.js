@@ -19,6 +19,9 @@ module.exports = function(grunt) {
       with_defaults: filenames
     },
     simplemocha: {
+      options: {
+        reporter: 'dot'
+      },
       all: {
         src: ['test/**/*.js']
       }
