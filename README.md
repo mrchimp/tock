@@ -44,6 +44,10 @@ You probably use a dependency manager, such as Bower:
 
     bower install tock
 
+...or maybe NPM:
+
+    npm install tocktimer
+
 Or you can just download a zip file using the "download zip" button on the right.
 
 
