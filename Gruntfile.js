@@ -18,6 +18,11 @@ module.exports = function(grunt) {
     jshint: {
       with_defaults: filenames
     },
+    simplemocha: {
+      all: {
+        src: ['test/**/*.js']
+      }
+    },
     focus: {
       all: {}
     },
@@ -25,8 +30,7 @@ module.exports = function(grunt) {
       compile: {
         files: filenames,
         tasks: [
-          'jshint',
-          'uglify'
+          'default'
         ],
         options: {
           nospawn: true
@@ -39,11 +43,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-focus');
 
   grunt.registerTask('default', [
-  	'jshint',
-  	'uglify'
+  	'uglify',
+    'jshint',
+    'simplemocha'
 	]);
 
 	grunt.registerTask('watch-all', [
