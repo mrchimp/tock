@@ -9,13 +9,12 @@ A javscript timer/countdown clock.
 Based on an idea by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
- > Note: I have renamed the repo from Tock to tock. Sorry for any inconvenience.
-
 
 # Readme Contents #
 
  * [What's so good about it?](#whats-so-good-about-it)
  * [When would I use it?](#when-would-i-use-it)
+ * [How do I get it?](#how-do-i-get-it)
  * [How do I use it?](#how-do-i-use-it)
  * [Options](#options)
  * [Callbacks](#callbacks)
@@ -37,6 +36,15 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
  * Countdown counters, e.g. "site will launch in..."
  * Timers
  * Accurate timing of any repeated action
+
+
+# How do I get it? #
+
+You probably use a dependency manager, such as Bower:
+
+    bower install tock
+
+Or you can just download a zip file using the "download zip" button on the right.
 
 
 # How do I use it? #
@@ -100,7 +108,7 @@ You could also create a reset button if you *are* using a countdown clock, but t
   * **complete** *function* Default: null (see below)
 
 
-# Callbacks #
+## Callbacks ##
 
 The callback option is a function that will be called once every `interval` milliseconds.
 
@@ -151,6 +159,23 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
    * If the input cannot be recognized as one of the above then 0 is returned
  * timeToTimecode(time)
    * returns an HH:MM:SS form from milliseconds
+
+
+# Development #
+
+I'm using [Grunt](http://gruntjs.com/) for task running and [Mocha](http://mochajs.org/) for testing. 
+
+Get all dependencies with:
+
+    npm install
+
+Run all tasks:
+
+    grunt
+
+Run all tasks automatically when you save.
+
+    grunt watch
 
 
 # License #
