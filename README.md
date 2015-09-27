@@ -161,7 +161,7 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
    * "HH:MM:SS"
    * "yyyy-mm-dd HH:MM:SS.ms"
    * If the input cannot be recognized as one of the above then 0 is returned
- * timeToTimecode(time)
+ * msToTimecode(time)
    * returns an HH:MM:SS form from milliseconds
 
 
