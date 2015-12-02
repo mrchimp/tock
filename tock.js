@@ -40,7 +40,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
       this.final_time = 0;
       this.go = false;
       this.callback(this);
-      window.clearTimeout(this.timeout);
+      clearTimeout(this.timeout);
       this.complete(this);
       return;
     }
@@ -60,7 +60,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
       }
     }
     else if ( this.go ) {
-      this.timeout = window.setTimeout(_tick.bind(this), next_interval_in);
+      this.timeout = setTimeout(_tick.bind(this), next_interval_in);
     }
   }
 
@@ -161,7 +161,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
     this.pause_time = this.lap();
     this.go = false;
 
-    window.clearTimeout(this.timeout);
+    clearTimeout(this.timeout);
 
     if ( this.countdown ) {
       this.final_time = this.duration_ms - this.time;
