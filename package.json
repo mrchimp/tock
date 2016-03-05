@@ -1,6 +1,6 @@
 {
   "name": "tocktimer",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "timer object/class. kickass!",
   "main": "tock.js",
   "repository": {
