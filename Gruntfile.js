@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     },
     simplemocha: {
       options: {
-        reporter: 'dot'
+        reporter: 'spec'
       },
       all: {
         src: ['test/**/*.js']

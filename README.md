@@ -2,7 +2,7 @@
 
 [![Bower version](https://badge.fury.io/bo/tock.svg)](http://badge.fury.io/bo/tock)
 
-A javscript timer/countdown clock. 
+A javscript timer/countdown clock.
 
 [View Demo](http://deviouschimp.co.uk/misc/tock)
 
@@ -26,7 +26,7 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 
 * Pure Javascript - no dependencies
 * Self-correcting time based on the system clock - won't go out of time unlike clocks based solely on setInterval or setTimeout (see the link above).
-* It can be used to count up from any arbitrary time (or 0:00) or countdown from a given time. 
+* It can be used to count up from any arbitrary time (or 0:00) or countdown from a given time.
 * It can call a callback function every tick (10 milliseconds) and (for countdown clocks) when the clock reaches 0:00.
 * It's about as accurate a clock as you can get with Javascript.
 
@@ -57,8 +57,8 @@ Tock.js works behind the scenes - it doesn't alter anything on screen - so here 
 
 ### 1) Make some html to show the clock. ###
 
-      <button id="start">Start</button> 
-      <button id="stop">Stop</button> 
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
       <input id="clock" value="10:00">
       <script> // javascripts... </script>
 
@@ -132,42 +132,40 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
 
 # Methods #
 
- * start(time)
-   * *time* (optional) can be either a countdown value or a starting value.
-     * If a countdown timer then set *time* to count down from.
-     * If a starting value then set *time* to the desired start time to count up from.
-     * For both timer types the following time formats are possible:
-        * "MM:SS"
-        * "MM:SS:ms"
-        * "MM:SS.ms"
-        * "HH:MM:SS"
-        * "yyyy-mm-dd HH:MM:SS.ms"
-        * milliseconds
- * stop()
-   * Stops the clock and clears the timeout() from memory.
- * pause()
-   * Stop the clock if it's running, continue clock if paused. Keeps the timeout() in memory.
- * reset()
-   * Restart times to zero. Countdown clocks still need a duration to be passed to `start()` after `reset()` is called.
- * lap()
-   * Returns elapsed time in milliseconds.
- * msToTime(ms)
-   * Note: this is rudimentary - won't handle > 1 hour
- * timeToMS(time)
-   Time should be a string of form:
-   * "MM:SS"
-   * "MM:SS:ms"
-   * "MM:SS.ms"
-   * "HH:MM:SS"
-   * "yyyy-mm-dd HH:MM:SS.ms"
-   * If the input cannot be recognized as one of the above then 0 is returned
- * msToTimecode(time)
-   * returns an HH:MM:SS form from milliseconds
+ * **start(time)** - Start the timer
+   * `time` (optional) can be either a countdown value or a starting value.
+     * If a countdown timer then set `time` to count down from.
+     * If a starting value then set `time` to the desired start time to count up from.
+     * Both timer types allow `time` as an integer number of milliseconds or as as string - see `timeToMS` below.
+ * **stop()** - Stop the clock and clear the timeout
+ * **pause()** - Stop the clock if it's running, continue clock if paused
+ * **reset()** - Reset times to zero
+   * Note: Countdown clocks need a duration to be passed to `start()` after `reset()` is called.
+ * **lap()** - Return elapsed time in milliseconds
+
+### Conversion ###
+
+ > *Note: Tock is designed to work with millisecond values. These conversion methods are provided as basic helpers and may be removed entirely in later versions. If you want more complex or custom formatting, you might want to use [Moment.js](http://momentjs.com/).*
+
+ * **msToTime(ms)** - Convert number of milliseconds to a `MM:SS` time string
+   * Won't handle times greater than 1 hour
+ * **msToTimecode(ms, show_ms)** - Convert number of milliseconds to timecode string
+   * `ms` - number of milliseconds
+   * `show_ms` - Optional. If true, return an `HH:MM:SS:mmm` format otherwise `HH:MM:SS`
+ * **timeToMS(time)** - Convert a time string to a number of milliseconds
+   * `string` - should be a duration as a string of form:
+     * `MM:SS`
+     * `MM:SS:ms`
+     * `MM:SS.ms`
+     * `HH:MM:SS`
+   * Alternatively a time in the future can be provided using the form `yyyy-mm-dd HH:MM:SS.ms`. The difference between
+   this time and present will be returned.
+   * If the input cannot be recognized as one of the above then `0` is returned
 
 
 # Development #
 
-I'm using [Grunt](http://gruntjs.com/) for task running and [Mocha](http://mochajs.org/) for testing. 
+I'm using [Grunt](http://gruntjs.com/) for task running and [Mocha](http://mochajs.org/) for testing.
 
 Get all dependencies with:
 
