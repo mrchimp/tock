@@ -38,16 +38,16 @@ describe('Tock', function () {
 			assert.equal(timer.msToTimecode(36610000), '10:10:10');
 		});
 
-		it('return a HH:MM:SS:ms string', function () {
-			assert.equal(timer.msToTimecode(36610010, true), '10:10:10:010');
+		it('return a HH:MM:SS.ms string', function () {
+			assert.equal(timer.msToTimecode(36610010, true), '10:10:10.010');
 		});
 
 		it('return an empty HH:MM:SS string', function () {
 			assert.equal(timer.msToTimecode(0), '00:00:00');
 		});
 
-		it('return an empty HH:MM:SS:ms string', function () {
-			assert.equal(timer.msToTimecode(0, true), '00:00:00:000');
+		it('return an empty HH:MM:SS.ms string', function () {
+			assert.equal(timer.msToTimecode(0, true), '00:00:00.000');
 		});
 	});
 
@@ -55,6 +55,9 @@ describe('Tock', function () {
 		it('return a MM:SS.ms string', function () {
 			assert.equal(timer.msToTime(600001), '10:00.001');
 		});
+		it('return a MM:SS string', function () {
+			assert.equal(timer.msToTime(600001,true), '10:00');
+		})
 	});
 
 });
