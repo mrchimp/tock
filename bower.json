@@ -1,7 +1,7 @@
 {
 	"name": "tock",
-	"version": "1.0.10",
-	"main": "./tock.min.js",
+	"version": "1.0.11",
+	"main": "./tock.js",
 	"ignore": [
 		"**/.md",
 		"**/.html",
