@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <title>Tock</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="tock.js"></script>
+    <style>
+        #laptimes {
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 200px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            var start_time = new Date().getTime();
+            var naive_time = 0;
+            var interval_time = 1000;
+
+            var timer = new Tock({
+                interval: interval_time,
+                callback: function () {
+                    $('#tock_clock').val(timer.lap());
+                    $('#diff').val(timer.lap() - naive_time);
+                    $('#tock_error').val(new Date().getTime() - start_time - timer.lap());
+                }.bind(this)
+            });
+            timer.start();
+
+            window.setInterval(function () {
+                naive_time += interval_time;
+                $('#naive_clock').val(naive_time);
+                $('#diff').val(timer.lap() - naive_time);
+                $('#naive_error').val(new Date().getTime() - start_time - naive_time);
+            }.bind(this), interval_time);
+        }
+    </script>
+</head>
+
+<body>
+    <p>
+        <label for="tock_clock">Tock clock</label>
+        <input id="tock_clock">
+    </p>
+    <p>
+        <label for="tock_error">Tock Error</label>
+        <input id="tock_error">
+    </p>
+    <p>
+        <label for="diff">Difference between Tock and setInterval timer</label>
+        <input id="diff">
+    </p>
+    <p>
+        <label for="naive_error">setInterval Clock Error</label>
+        <input id="naive_error">
+    </p>
+    <p>
+        <label for="naive_clock">setInterval Clock</label>
+        <input id="naive_clock">
+    </p>
+</body>
+</html>
