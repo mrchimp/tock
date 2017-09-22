@@ -12,6 +12,7 @@
     "clock",
     "repetition"
   ],
+  "typings": "tock.d.ts",
   "author": "Mr Chimp <chimpytk@gmail.com>",
   "license": "MIT",
   "bugs": {
