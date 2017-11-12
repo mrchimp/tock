@@ -49,6 +49,16 @@ describe('Tock', function () {
 		it('return an empty HH:MM:SS.ms string', function () {
 			assert.equal(timer.msToTimecode(0, true), '00:00:00.000');
 		});
+
+		var hour = 3600000;
+
+		it('return correct time when using large number of hours', function () {
+			assert.equal(timer.msToTimecode(50 * hour), '50:00:00');
+		});
+
+		it('return correct time when greater than 60 hours', function () {
+			assert.equal(timer.msToTimecode(80 * hour), '80:00:00');
+		});
 	});
 
 	describe('msToTime()', function () {
