@@ -213,15 +213,16 @@ if ( typeof Function.prototype.bind != 'function' ) {
 
   /**
    * Format milliseconds as a MM:SS.ms string.
-   * @param  {Integer} ms Number of milliseconds
-   * @return {String}     String representation of ms in format MM:SS:ms
+   * @param  {Integer} ms       Number of milliseconds
+   * @param  {Integer} hide_ms  If true, exclude milliseconds in output
+   * @return {String}           String representation of ms in format MM:SS.ms
    */
-  Tock.prototype.msToTime = function (ms) {
-    var milliseconds = this.zeroPad(ms % MS_PER_SEC, 3),
+  Tock.prototype.msToTime = function (ms, hide_ms) {
+    var milliseconds = (hide_ms ? '' : '.' + this.zeroPad(ms % MS_PER_SEC, 3)),
         seconds = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
         minutes = this.zeroPad(Math.floor((ms / (MS_PER_MIN)) % 60), 2);
 
-    return minutes + ':' + seconds + '.' + milliseconds;
+    return minutes + ':' + seconds + milliseconds;
   };
 
   /**
@@ -242,7 +243,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
   };
 
   /**
-   * Format milliseconds as HH:MM:SS or HH:MM:SS:mmm
+   * Format milliseconds as HH:MM:SS or HH:MM:SS.mmm
    * @param  {Integer} ms      Number of milliseconds
    * @param  {Boolean} show_ms If true, include milliseconds in output
    * @return {String}          Formatted timecode string
@@ -251,7 +252,7 @@ if ( typeof Function.prototype.bind != 'function' ) {
     var seconds  = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
         minutes  = this.zeroPad(Math.floor((ms / MS_PER_MIN) % 60), 2),
         hours    = this.zeroPad(Math.floor((ms / MS_PER_HOUR)), 2),
-        millisec = (show_ms ? ':' + this.zeroPad(Math.floor(ms % MS_PER_SEC), 3) : '');
+        millisec = (show_ms ? '.' + this.zeroPad(Math.floor(ms % MS_PER_SEC), 3) : '');
 
     return hours + ':' + minutes + ':' + seconds + millisec;
   };

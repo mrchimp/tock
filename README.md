@@ -147,7 +147,9 @@ As we are have set `countdown` to `true` we can also pass in a function to call 
 
  > *Note: Tock is designed to work with millisecond values. These conversion methods are provided as basic helpers and may be removed entirely in later versions. If you want more complex or custom formatting, you might want to use [Moment.js](http://momentjs.com/).*
 
- * **msToTime(ms)** - Convert number of milliseconds to a `MM:SS` time string
+ * **msToTime(ms, hide_ms)** - Convert number of milliseconds to time string
+   * `ms` - number of milliseconds
+   * `hide_ms` - Optional. If true, return an `MM:SS` format otherwise `MM:SS.mmm`
    * Won't handle times greater than 1 hour
  * **msToTimecode(ms, show_ms)** - Convert number of milliseconds to timecode string
    * `ms` - number of milliseconds
