@@ -4,7 +4,7 @@
 
 A javscript timer/countdown clock.
 
-[View Demo](http://tock.deviouschimp.co.uk)
+[View Demo](https://mrchimp.github.io/tock-demo/)
 
 Based on an idea by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
