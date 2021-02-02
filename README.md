@@ -68,18 +68,18 @@ Tock.js works behind the scenes - it doesn't alter anything on screen - so here 
 
 ### 2) Instantiate a Tock ###
 
-Now we write some Javascript. First we'll create a new instance of Tock and assign it to a variable called *timer*.
+First create a new instance of Tock and assign it to a variable called *timer*.
 
 ```js
-var timer = new Tock();
+const timer = new Tock();
 ```
 
 This will give you a clock that will count up from 00:00 when the start() method is called. The stop() and reset() methods can also be used.
 
-For more control we can pass in some options. *Note that all options are... optional.*
+For more control we can pass in some options. *Note that all options are...optional.*
 
 ```js
-var timer = new Tock({
+const timer = new Tock({
   countdown: true,
   interval: 10,
   callback: someCallbackFunction,
@@ -87,11 +87,10 @@ var timer = new Tock({
 });
 ```
 
-[See available options below](#options)
-
 ### 2) Add some controls ###
 
-You'll need some way of controlling your clock. Let's set up some buttons.
+You'll need some way of controlling your clock. Let's set add a start button. Note that we get the time from the clock input and pass it to the start function as the start time.
+
 
 ```js
 document.getElementById('start').addEventListener('click', () => {
@@ -99,7 +98,7 @@ document.getElementById('start').addEventListener('click', () => {
 });
 ```
 
-Note that we get the time from the clock input and pass it to the start function as the start time.
+Now add a stop button
 
 ```js
 document.getElementById('stop').addEventListener('click', () => {
@@ -133,16 +132,16 @@ The callback option is a function that will be called once every `interval` mill
 Here we'll use the `lap()` method to get the current clock time (in milliseconds). We'll then pass that through `msToTime()` to format it nicely before displaying it in the `input` field.
 
 ```js
-callback: function () {
+callback: () => {
   var current_time = timer.msToTime(timer.lap());
   document.getElementById('clock').value = current_time;
 },
 ```
 
-As we are have set `countdown` to `true` we can also pass in a function to call once the countdown reaches zero.
+If `countdown` is `true` you can also pass in a function to call once the countdown reaches zero.
 
 ```js
-complete: function () {
+complete: () => {
   alert("Time's up!");
 },
 ```
@@ -151,9 +150,12 @@ complete: function () {
 
  * **start(time)** - Start the timer
    * `time` (optional) can be either a countdown value or a starting value.
-     * If a countdown timer then set `time` to count down from.
-     * If a starting value then set `time` to the desired start time to count up from.
-     * Both timer types allow `time` as an integer number of milliseconds or as as string - see `timeToMS` below.
+
+     If a `countdown` is `true` then set `time` to count down from.
+
+     If a `countdown` is `false` or not `time` will control start time to count up from.
+
+     Both timer types allow `time` as an integer number of milliseconds or as as string - see `timeToMS` below.
  * **stop()** - Stop the clock and clear the timeout
  * **pause()** - Stop the clock if it's running, continue clock if paused
  * **reset()** - Reset times to zero
