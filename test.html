@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Tock</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="tock.js"></script>
     <style>
         #laptimes {
@@ -20,18 +20,19 @@
             var timer = new Tock({
                 interval: interval_time,
                 callback: function () {
-                    $('#tock_clock').val(timer.lap());
-                    $('#diff').val(timer.lap() - naive_time);
-                    $('#tock_error').val(new Date().getTime() - start_time - timer.lap());
+                    document.getElementById('tock_clock').value = timer.lap();
+                    document.getElementById('diff').value = timer.lap() - naive_time;
+                    document.getElementById('tock_error').value = new Date().getTime() - start_time - timer.lap();
                 }.bind(this)
             });
+
             timer.start();
 
             window.setInterval(function () {
                 naive_time += interval_time;
-                $('#naive_clock').val(naive_time);
-                $('#diff').val(timer.lap() - naive_time);
-                $('#naive_error').val(new Date().getTime() - start_time - naive_time);
+                document.getElementById('naive_clock').value = naive_time;
+                document.getElementById('diff').value = timer.lap() - naive_time;
+                document.getElementById('naive_error').value = new Date().getTime() - start_time - naive_time;
             }.bind(this), interval_time);
         }
     </script>
