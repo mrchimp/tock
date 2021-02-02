@@ -40,11 +40,15 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 
 You probably use a dependency manager, such as NPM:
 
-    npm install tocktimer
+```bash
+npm install tocktimer
+```
 
 or Yarn
 
-    yarn add tocktimer
+```bash
+yarn add tocktimer
+```
 
 
 # How do I use it? #
@@ -53,49 +57,63 @@ Tock.js works behind the scenes - it doesn't alter anything on screen - so here 
 
 ### 1) Make some html to show the clock. ###
 
-      <button id="start">Start</button>
-      <button id="stop">Stop</button>
-      <input id="clock" value="10:00">
-      <script> // javascripts... </script>
+```html
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<input id="clock" value="10:00">
+<script>
+ //
+</script>
+```
 
 ### 2) Instantiate a Tock ###
 
 Now we write some Javascript. First we'll create a new instance of Tock and assign it to a variable called *timer*.
 
-    var timer = new Tock();
+```js
+var timer = new Tock();
+```
 
 This will give you a clock that will count up from 00:00 when the start() method is called. The stop() and reset() methods can also be used.
 
 For more control we can pass in some options. *Note that all options are... optional.*
 
-    var timer = new Tock({
-      countdown: true,
-      interval: 10,
-      callback: someCallbackFunction,
-      complete: someCompleteFunction
-    });
+```js
+var timer = new Tock({
+  countdown: true,
+  interval: 10,
+  callback: someCallbackFunction,
+  complete: someCompleteFunction
+});
+```
 
 [See available options below](#options)
 
 ### 2) Add some controls ###
 
-You'll need some way of controlling your clock. Let's set up some buttons *(using jQuery for example)*.
+You'll need some way of controlling your clock. Let's set up some buttons.
 
-    $('#start').on('click', function() {
-	    timer.start($('#clock').val());
-	});
+```js
+document.getElementById('start').addEventListener('click', () => {
+  timer.start(document.getElementById('clock').value);
+});
+```
 
 Note that we get the time from the clock input and pass it to the start function as the start time.
 
-    $('#stop').on('click', function() {
-	    timer.stop();
-	});
+```js
+document.getElementById('stop').addEventListener('click', () => {
+  timer.stop();
+});
+```
 
 If you're not using a countdown clock you can make a reset button, too.
 
-    $('#reset').on('click', function() {
-	    timer.reset();
-	});
+```js
+document.getElementById('reset').addEventListener('click', () => {
+  timer.reset();
+});
+```
 
 You could also create a reset button if you *are* using a countdown clock, but that's beyond the scope of this walkthrough. The tools are there. Do with them what you can. After this next section you're on your own. Good luck. We're all counting on you.
 
@@ -114,17 +132,20 @@ The callback option is a function that will be called once every `interval` mill
 
 Here we'll use the `lap()` method to get the current clock time (in milliseconds). We'll then pass that through `msToTime()` to format it nicely before displaying it in the `input` field.
 
-    callback: function () {
-        var current_time = timer.msToTime(timer.lap());
-        $('#clock').val(current_time);
-    }
+```js
+callback: function () {
+  var current_time = timer.msToTime(timer.lap());
+  document.getElementById('clock').value = current_time;
+},
+```
 
 As we are have set `countdown` to `true` we can also pass in a function to call once the countdown reaches zero.
 
-    complete: function () {
-        alert("Time's up!");
-    }
-
+```js
+complete: function () {
+  alert("Time's up!");
+},
+```
 
 # Methods #
 
@@ -165,16 +186,21 @@ I'm using [Grunt](http://gruntjs.com/) for task running and [Mocha](http://mocha
 
 Get all dependencies with:
 
-    npm install
+```bash
+npm install
+```
 
 Run all tasks:
 
-    grunt
+```bash
+grunt
+```
 
 Run all tasks automatically when you save.
 
-    grunt watch
-
+```bash
+grunt watch
+```
 
 # License #
 
