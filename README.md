@@ -1,7 +1,5 @@
 # Tock #
 
-[![Bower version](https://badge.fury.io/bo/tock.svg)](http://badge.fury.io/bo/tock)
-
 A javscript timer/countdown clock.
 
 [View Demo](https://mrchimp.github.io/tock-demo/)
@@ -40,15 +38,13 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 
 # How do I get it? #
 
-You probably use a dependency manager, such as Bower:
-
-    bower install tock
-
-...or maybe NPM:
+You probably use a dependency manager, such as NPM:
 
     npm install tocktimer
 
-Or you can just download a zip file using the "download zip" button on the right.
+or Yarn
+
+    yarn add tocktimer
 
 
 # How do I use it? #
