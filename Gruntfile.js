@@ -1,61 +1,51 @@
-module.exports = function(grunt) {
-
-	var filenames = ['tock.js'];
+module.exports = function (grunt) {
+  var filenames = ["tock.js"];
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON("package.json"),
     uglify: {
       options: {
         mangle: false,
-        compress: false
+        compress: false,
       },
       dist: {
         files: {
-          'tock.min.js': filenames
-        }
-      }
+          "tock.min.js": filenames,
+        },
+      },
     },
     jshint: {
-      with_defaults: filenames
+      with_defaults: filenames,
     },
     simplemocha: {
       options: {
-        reporter: 'spec'
+        reporter: "spec",
       },
       all: {
-        src: ['test/**/*.js']
-      }
+        src: ["test/**/*.js"],
+      },
     },
     focus: {
-      all: {}
+      all: {},
     },
     watch: {
       compile: {
         files: filenames,
-        tasks: [
-          'default'
-        ],
+        tasks: ["default"],
         options: {
-          nospawn: true
-        }
+          nospawn: true,
+        },
       },
-  	}
-	});
+    },
+  });
 
+  grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-contrib-uglify");
+  grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-simple-mocha");
+  grunt.loadNpmTasks("grunt-focus");
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-simple-mocha');
-  grunt.loadNpmTasks('grunt-focus');
+  grunt.registerTask("default", ["uglify", "jshint", "simplemocha"]);
 
-  grunt.registerTask('default', [
-  	'uglify',
-    'jshint',
-    'simplemocha'
-	]);
-
-	grunt.registerTask('watch-all', [
-		'focus:all'
-	]);
+  grunt.registerTask("watch-all", ["focus:all"]);
 };
