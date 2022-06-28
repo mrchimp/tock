@@ -1,6 +1,6 @@
 {
   "name": "tocktimer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "timer object/class. kickass!",
   "main": "tock.js",
   "repository": {
@@ -24,6 +24,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-focus": "^1.0.0",
     "grunt-simple-mocha": "^0.4.1",
-    "mocha": "^8.2.1"
+    "mocha": "^10.0.0"
   }
 }
