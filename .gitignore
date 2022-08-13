@@ -1,3 +1,7 @@
+tock.js
+tock.js.map
+tock.d.ts
+
 #################
 ## Eclipse
 #################
@@ -165,3 +169,4 @@ pip-log.txt
 # Node
 node_modules
 npm-debug.log
+

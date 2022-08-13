@@ -7,6 +7,17 @@ A javscript timer/countdown clock.
 Based on an idea by James Edwards:
 http://sitepoint.com/creating-accurate-timers-in-javascript/
 
+# Version 2 Changes
+
+- Rewrite Tock as an ES6 module using TypeScript
+- Move distribution files to `/dist`
+- Replace setYear with setFullYear in timeToMs
+- Remove polyfills
+
+@todo
+
+- Get a plain, includeable js file generated
+
 
 # Readme Contents #
 
@@ -195,13 +206,21 @@ npm install
 Run all tasks:
 
 ```bash
-grunt
+npm run build
 ```
 
-Run all tasks automatically when you save.
+# Testing
+
+Run tests
 
 ```bash
-grunt watch
+npm run test
+```
+
+Run a server and open the test/demo html file
+
+```bash
+npm run serve
 ```
 
 # License #
