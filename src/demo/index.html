@@ -1,92 +1,152 @@
 <!doctype html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Tock</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css" integrity="sha512-V0+DPzYyLzIiMiWCg3nNdY+NyIiK9bED/T1xNBj08CaIUyK3sXRpB26OUCIzujMevxY9TRJFHQIxTwgzb0jVLg==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js" integrity="sha512-9rxMbTkN9JcgG5euudGbdIbhFZ7KGyAuVomdQDI9qXfPply9BJh0iqA7E/moLCatH2JD4xBGHwV6ezBkCpnjRQ==" crossorigin="anonymous"></script>
-    <style>
-        #laptimes {
-            border: 1px solid #ddd;
-            padding: 10px;
-            width: 200px;
-        }
-        #chart {
-          width: 100%;
-        }
-        input {
-            font-size: 24px;
-            width: 160px;
-        }
-    </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Tock</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css" integrity="sha512-V0+DPzYyLzIiMiWCg3nNdY+NyIiK9bED/T1xNBj08CaIUyK3sXRpB26OUCIzujMevxY9TRJFHQIxTwgzb0jVLg==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    #laptimes {
+      border: 1px solid #ddd;
+      padding: 10px;
+      width: 200px;
+      margin-top: 1rem;
+    }
+    #chart {
+      width: 100%;
+    }
+    input {
+      font-size: 24px;
+      width: 160px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js" integrity="sha512-9rxMbTkN9JcgG5euudGbdIbhFZ7KGyAuVomdQDI9qXfPply9BJh0iqA7E/moLCatH2JD4xBGHwV6ezBkCpnjRQ==" crossorigin="anonymous"></script>
+  <script src="index.js"></script>
 </head>
 
 <body>
-    <section class="section">
-      <h1 class="title is-1">Tock Demo</h1>
-      <table class="table is-fullwidth is-hoverable">
-          <tr>
-              <td></td>
-              <th>Time</th>
-              <th>Error</th>
-              <th>Ticks</th>
-          </tr>
-          <tr>
-              <th>Tock</th>
-              <td>
-                  <input id="tockClock" readonly>
-              </td>
-              <td>
-                  <input id="tockError" readonly>
-              </td>
-              <td>
-                  <input id="tockTick" readonly>
-              </td>
-          </tr>
-          <tr>
-              <th>Naive</th>
-              <td>
-                  <input id="naiveClock" readonly>
-              </td>
-              <td>
-                  <input id="naiveError" readonly>
-              </td>
-              <td>
-                  <input id="naiveTick" readonly>
-              </td>
-          </tr>
-          <tr>
-              <th>Actual</th>
-              <td>
-                  <input id="clockDiff" readonly>
-              </td>
-              <td>
-                  <!-- <input id="clockError" readonly value="0"> -->
-              </td>
-              <td></td>
-          </tr>
-      </table>
+  <section class="section">
+    <h1 class="title is-1">Tock</h1>
 
+    <div class="content">
       <p>
-          <button id="stopButton" type="button">Stop</button>
+        by <a href="http://github.com/mrchimp/tock" target="_blank" rel="noopener noreferrer">Mr Chimp</a>
       </p>
+    </div>
 
-      <div class="chart"></div>
+    <h2 class="title is-2">Explanation</h2>
 
-      <div class="content">
-        <p>
-          The above demo uses two timers. The first uses Tock.js. The second uses a naive approach of passing a callback function to <code>window.setInterval()</code>.
-        </p>
-        <p>
-          If you watch the graph for some time you will notice it become more and more out of sync, especially if you minimize the browser window. This is because the setInterval is not accurate enough that it can be relied upon to tick at regular intervals. Browsers also sometimes disable intervals when the window is not visible in order to save energy.
-        </p>
-        <p>
-          Tock takes a slightly different approach in that it uses <code>window.setTimeout()</code> with the same interval time and then checks against the system clock and corrects itself for teh next tick. It will still waver slightly due to the limitations of JavaScript time handling. But this inaccuracy won't compound in the same way that setInterval can.
-        </p>
+    <table class="table is-fullwidth is-hoverable">
+      <tr>
+        <td></td>
+        <th>Time</th>
+        <th>Error</th>
+        <th>Ticks</th>
+      </tr>
+      <tr>
+        <th>Tock</th>
+        <td>
+          <input id="tockClock" readonly>
+        </td>
+        <td>
+          <input id="tockError" readonly>
+        </td>
+        <td>
+          <input id="tockTick" readonly>
+        </td>
+      </tr>
+      <tr>
+        <th>Naive</th>
+        <td>
+          <input id="naiveClock" readonly>
+        </td>
+        <td>
+          <input id="naiveError" readonly>
+        </td>
+        <td>
+          <input id="naiveTick" readonly>
+        </td>
+      </tr>
+      <tr>
+        <th>Actual</th>
+        <td>
+          <input id="clockDiff" readonly>
+        </td>
+        <td>
+          <!-- <input id="clockError" readonly value="0"> -->
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+    <p>
+      <button id="stopButton" type="button" class="button is-dark">Stop</button>
+    </p>
+
+    <div class="chart"></div>
+
+    <div class="content">
+      <p>
+        The above demo uses two timers. The first uses Tock.js. The second uses a naive approach of passing a callback function to <code>window.setInterval()</code>.
+      </p>
+      <p>
+        If you watch the graph for some time you will notice it become more and more out of sync, especially if you minimize the browser window. This is because the setInterval is not accurate enough that it can be relied upon to tick at regular intervals. Browsers also sometimes disable intervals when the window is not visible in order to save energy.
+      </p>
+      <p>
+        Tock takes a slightly different approach in that it uses <code>window.setTimeout()</code> with the same interval time and then checks against the system clock and corrects itself for teh next tick. It will still waver slightly due to the limitations of JavaScript time handling. But this inaccuracy won't compound in the same way that setInterval can.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="title is-2">Timer Example</h2>
+    <div class="field is-grouped">
+      <p class="control">
+        <button class="button is-success" id="start">Start</button>
+      </p>
+      <p class="control">
+        <button class="button is-info" id="lap">Lap</button>
+      </p>
+      <p class="control">
+        <button class="button is-warning" id="pause">Pause</button>
+      </p>
+      <p class="control">
+        <button class="button is-danger" id="stop">Stop</button>
+      </p>
+      <p class="control">
+        <button class="button" id="reset">Reset</button>
+      </p>
+    </div>
+    <div>
+        <input id="clockface" placeholder="00:00:00" class="input is-medium">
+    </div>
+    <div>
+        <ul id="laptimes"></ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="title is-2">Countdown Example</h2>
+    <div class="field is-grouped">
+      <p class="control">
+        <button class="button is-success" id="startCountdown">Start</button>
+      </p>
+      <p class="control">
+        <button class="button is-danger" id="stopCountdown">Stop</button>
+      </p>
+      <p class="control">
+        <button class="button is-warning" id="pauseCountdown">Pause</button>
+      </p>
+      <p class="control">
+        <button class="button" id="resetCountdown">Reset</button>
+      </p>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <input id="countdown_clock" placeholder="00:00" value="00:02" class="input is-medium">
       </div>
-    </section>
-
-    <script src="index.js"></script>
+    </div>
+  </section>
 </body>
 </html>

@@ -1,16 +1,16 @@
-// const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: "development",
   devtool: "cheap-module-source-map",
-  entry: "./src/demo/index.ts",
+  entry: "./src/demo/index.js",
   output: {
     filename: "demo/index.js",
   },
   optimization: {
-    minimize: true,
+    minimize: false,
+    // minimize: true,
     minimizer: [new TerserPlugin({ extractComments: false })],
   },
   devServer: {
@@ -33,12 +33,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: "src/demo/index.html",
-    //   publicPath: "demo",
-    // }),
-  ],
   resolve: {
     extensions: [".ts", ".js", ".json"],
   },
