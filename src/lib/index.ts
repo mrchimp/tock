@@ -4,7 +4,7 @@
  *    sitepoint.com/creating-accurate-timers-in-javascript/
  */
 
-import { TockOptions } from "./types/TockOptions";
+import { TockOptions } from "../types/TockOptions";
 
 const MILLISECONDS_RE = /^\s*(\+|-)?\d+\s*$/;
 const MM_SS_RE = /^(\d{1,2}):(\d{2})$/;
@@ -20,7 +20,7 @@ const MS_PER_SEC = 1000;
 const yyyy_mm_dd_HH_MM_SS_ms_RE =
   /^(\d{4})-([0-1]\d)-([0-3]\d)(?:\s|T)(\d{2}):(\d{2}):(\d{2})(?:\.(\d{3})Z?)?$/;
 
-export default class {
+class Tock {
   go: boolean;
   timeout: number | undefined;
   missed_ticks: null | number;
@@ -32,7 +32,7 @@ export default class {
   duration_ms: number;
   time: number;
   callback: (self: this) => void;
-  complete: (eslf: this) => void;
+  complete: (self: this) => void;
 
   constructor(options: TockOptions = {}) {
     this.go = false;
@@ -80,7 +80,7 @@ export default class {
         this.#tick.call(this);
       }
     } else if (this.go) {
-      this.timeout = setTimeout(this.#tick.bind(this), next_interval_in);
+      this.timeout = window.setTimeout(this.#tick.bind(this), next_interval_in);
     }
   }
 
@@ -324,3 +324,5 @@ export default class {
     return 0;
   }
 }
+
+export default Tock;

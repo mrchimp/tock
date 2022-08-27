@@ -14,11 +14,6 @@ http://sitepoint.com/creating-accurate-timers-in-javascript/
 - Replace setYear with setFullYear in timeToMs
 - Remove polyfills
 
-@todo
-
-- Get a plain, includeable js file generated
-
-
 # Readme Contents #
 
  * [What's so good about it?](#whats-so-good-about-it)

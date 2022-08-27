@@ -1,8 +1,8 @@
-import tock from "../dist/tock.esm.min.js";
-import assert from "assert";
-import fs from "fs";
+const Tock = require("../build/tock.js");
+const assert = require("assert");
 
-const timer = new tock();
+console.log("balls", Tock);
+const timer = new Tock();
 
 describe("Tock", function () {
   describe("timeToMS()", function () {
